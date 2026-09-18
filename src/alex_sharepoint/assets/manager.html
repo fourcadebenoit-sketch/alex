@@ -1,0 +1,2570 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Back-office Manager — LCB-FT</title>
+<style>
+/* ═══════════════════════════════════════════════════
+   FINTECH ELITE — Design System CNP LCB-FT
+═══════════════════════════════════════════════════ */
+:root{
+  --primary:#0f172a;--primary-light:#1e293b;--primary-mid:#253347;--primary-dark:#060d1a;
+  --accent:#4f46e5;--accent-light:#818cf8;--accent-dark:#3730a3;--accent-soft:#e0e7ff;--accent-glow:rgba(79,70,229,.22);
+  --success:#10b981;--success-light:#34d399;--success-dark:#059669;--success-glow:rgba(16,185,129,.2);
+  --warning:#f59e0b;--warning-light:#fbbf24;--warning-dark:#d97706;
+  --error:#ef4444;--error-light:#f87171;--error-dark:#dc2626;--error-glow:rgba(239,68,68,.2);
+  --neutral:#64748b;--neutral-light:#94a3b8;--neutral-dark:#475569;
+  --background:#eef2f9;--surface:#ffffff;--surface-raised:#fafbff;--surface-hover:#f5f7ff;
+  --border:#dde3ef;--border-light:#eef2f9;--border-dark:#c4cdd8;
+  --text-primary:#0f172a;--text-secondary:#475569;--text-muted:#94a3b8;
+  --shadow-sm:0 2px 6px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04);
+  --shadow:0 4px 12px rgba(15,23,42,.08),0 2px 4px rgba(15,23,42,.05);
+  --shadow-md:0 8px 20px rgba(15,23,42,.1),0 4px 8px rgba(15,23,42,.06);
+  --shadow-lg:0 16px 36px rgba(15,23,42,.12),0 8px 16px rgba(15,23,42,.08);
+  --shadow-accent:0 8px 24px var(--accent-glow);
+  --shadow-success:0 8px 24px var(--success-glow);
+  --radius-sm:6px;--radius:10px;--radius-md:14px;--radius-lg:18px;--radius-xl:24px;
+  --transition:0.22s cubic-bezier(0.4,0,0.2,1);
+  --transition-fast:0.14s cubic-bezier(0.4,0,0.2,1);
+  --spring:0.3s cubic-bezier(0.34,1.56,0.64,1);
+  --spring-fast:0.2s cubic-bezier(0.34,1.56,0.64,1);
+  --shadow-card-hover:0 16px 40px rgba(15,23,42,.14),0 6px 16px rgba(79,70,229,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:var(--background);background-image:radial-gradient(ellipse at 20% 50%,rgba(79,70,229,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(16,185,129,.04) 0%,transparent 50%);color:var(--text-primary);font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;min-height:100vh}
+/* TOOLTIP CARTE STATS */
+.card-stat-tooltip { position: relative; cursor: help; }
+.card-stat-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%);
+  background: var(--primary); color: #fff; padding: 10px; border-radius: var(--radius);
+  font-size: 12px; white-space: nowrap; z-index: 1000; display: none;
+  box-shadow: var(--shadow-lg); pointer-events: none;
+}
+.card-stat-tooltip:hover::after { display: block; }
+/* TOOLTIP ONGLET À TRAITER */
+.tab { position: relative; }
+.tab-tooltip {
+  display: none; position: absolute; top: 100%; left: 0;
+  background: var(--primary); color: #fff; padding: 10px;
+  border-radius: var(--radius); font-size: 12px;
+  white-space: nowrap; z-index: 1000; box-shadow: var(--shadow-lg);
+  pointer-events: none; margin-top: 5px;
+}
+.tab:hover .tab-tooltip { display: block; }
+/* HOME VIEW */
+.home-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:65vh;text-align:center;animation:fadeUp .5s ease-out}
+.home-title{font-size:38px;font-weight:700;color:var(--accent-dark);margin-bottom:16px;letter-spacing:-.02em;}
+.home-subtitle{font-size:16px;color:var(--text-secondary);margin-bottom:48px;font-weight:500;}
+.home-cards{display:flex;gap:40px;justify-content:center;flex-wrap:wrap}
+.home-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-xl);padding:52px 36px;width:400px;cursor:pointer;transition:all var(--spring);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;gap:20px;position:relative;overflow:hidden}
+.home-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(79,70,229,.05) 0%,transparent 60%);opacity:0;transition:opacity .3s}
+.home-card:hover::before{opacity:1}
+.home-card:hover{transform:translateY(-10px);border-color:var(--accent);box-shadow:var(--shadow-lg),var(--shadow-accent)}
+.home-card .ico{font-size:42px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.12))}
+.home-card .ttl{font-size:16px;font-weight:600;color:var(--text-primary);letter-spacing:normal;}
+.btn-accueil{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:var(--radius-md);padding:8px 16px;color:#fff;font-weight:600;cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:8px;font-size:14px;margin-right:16px;backdrop-filter:blur(6px)}
+.btn-accueil:hover{background:rgba(255,255,255,.2)}
+/* HEADER */
+.autosave-text{font-size:11px;color:rgba(255,255,255,.55);margin-right:8px;font-weight:500;font-family:'JetBrains Mono',monospace}
+.btn-save{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-md);padding:7px 16px;color:#fff;font-weight:600;cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:6px;font-size:13px;margin-right:12px;backdrop-filter:blur(6px)}
+.btn-save:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.4);transform:translateY(-1px)}
+.hdr{background:linear-gradient(135deg,var(--primary-mid) 0%,var(--primary-dark) 100%);color:#fff;position:sticky;top:0;z-index:200;box-shadow:var(--shadow-lg)}
+.hdr-inner{max-width:1280px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hdr-logo{width:42px;height:42px;background:linear-gradient(135deg,var(--accent-light) 0%,var(--accent-dark) 100%);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;box-shadow:0 4px 12px rgba(79,70,229,.4),0 0 0 1px rgba(255,255,255,.1);transition:var(--spring)}
+.hdr-logo:hover{transform:scale(1.08) rotate(-3deg);box-shadow:0 8px 20px rgba(79,70,229,.5)}
+.hdr-info{margin-left:16px}
+.hdr-title{font-size:16px;font-weight:700;letter-spacing:-.025em}
+.hdr-id{font-size:12px;opacity:.7;font-family:'JetBrains Mono','Courier New',monospace;margin-top:2px}
+.rgpd-pill{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:6px 16px;font-size:12px;display:flex;align-items:center;gap:8px;backdrop-filter:blur(12px);transition:var(--transition);font-weight:500}
+.rgpd-pill:hover{background:rgba(255,255,255,.18)}
+.rgpd-dot{width:8px;height:8px;background:var(--success);border-radius:50%;animation:pulse 2.5s infinite;box-shadow:0 0 6px var(--success)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(0.9)}}
+/* TYPOLOGY SELECTOR (Niveau 1) */
+.typo-bar{background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,.05)}
+.typo-inner{max-width:1280px;margin:0 auto;padding:16px 28px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.typo-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;margin-right:8px}
+.typo-btn{display:flex;align-items:center;gap:10px;padding:12px 22px;font-size:14px;font-weight:600;color:var(--text-secondary);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-sm);font-family:inherit;position:relative;overflow:hidden}
+.typo-btn:hover{border-color:var(--border-dark);color:var(--text-primary);transform:translateY(-2px);box-shadow:var(--shadow),var(--shadow-accent)}
+.typo-btn.active{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);color:#fff;border-color:transparent;box-shadow:var(--shadow-md),var(--shadow-accent);pointer-events:none}
+.typo-btn .ico{font-size:18px}
+.typo-btn .count{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 7px;background:rgba(255,255,255,.25);border-radius:11px;font-size:11px;font-weight:700;margin-left:4px}
+.typo-btn:not(.active) .count{background:var(--accent);color:#fff}
+/* TABS (Niveau 2 — Statut) */
+.tabs-wrap{background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(15,23,42,.05)}
+.tabs{max-width:1280px;margin:0 auto;padding:0 28px;display:flex;position:relative}
+.tab{padding:15px 26px;font-size:14px;font-weight:500;color:var(--text-muted);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;margin-bottom:-1px;transition:color var(--transition),background var(--transition),font-weight var(--transition-fast);font-family:inherit;display:flex;align-items:center;gap:8px;position:relative;letter-spacing:.01em}
+.tab::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:3px;background:linear-gradient(90deg,var(--accent-dark) 0%,var(--accent) 50%,var(--accent-light) 100%);border-radius:3px 3px 0 0;transition:width 0.3s cubic-bezier(0.4,0,0.2,1);pointer-events:none}
+.tab:hover{color:var(--text-primary);background:rgba(79,70,229,.035)}
+.tab:hover::after{width:40%}
+.tab.active{color:var(--accent);font-weight:700;background:linear-gradient(to bottom,transparent 0%,rgba(79,70,229,.05) 100%)}
+.tab.active::after{width:calc(100% - 52px)}
+.tab .badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;background:var(--neutral-light);color:#fff;border-radius:10px;font-size:11px;font-weight:700;transition:background var(--transition),box-shadow var(--transition)}
+.tab.active .badge{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);box-shadow:0 2px 8px var(--accent-glow)}
+/* MAIN */
+.main{max-width:1280px;margin:0 auto;padding:28px}
+/* SUB-FILTERS (Tags + Historique sub-tabs) */
+.subfilter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:22px;padding:14px 18px;background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)}
+.subfilter-label{font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;margin-right:6px}
+.pill{padding:8px 16px;font-size:13px;font-weight:600;color:var(--text-secondary);background:var(--surface);border:1.5px solid var(--border);border-radius:24px;cursor:pointer;transition:all var(--transition);font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.pill:hover{border-color:var(--border-dark);color:var(--text-primary);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.pill.active{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);color:#fff;border-color:transparent;box-shadow:var(--shadow-sm),var(--shadow-accent)}
+.pill .pcount{font-size:11px;background:rgba(255,255,255,.25);padding:1px 7px;border-radius:10px;font-weight:700}
+.pill:not(.active) .pcount{background:var(--accent);color:#fff}
+.pill.tag-urgent.active{background:linear-gradient(135deg,var(--error) 0%,var(--error-dark) 100%);box-shadow:var(--shadow-sm),var(--error-glow)}
+.pill.tag-prio.active{background:linear-gradient(135deg,var(--warning) 0%,var(--warning-dark) 100%)}
+.pill.tag-sans.active{background:linear-gradient(135deg,var(--neutral) 0%,var(--neutral-dark) 100%)}
+.pill.histo-signed.active{background:linear-gradient(135deg,var(--success) 0%,var(--success-dark) 100%);box-shadow:var(--shadow-sm),var(--success-glow)}
+.pill.histo-rejected.active{background:linear-gradient(135deg,var(--error) 0%,var(--error-dark) 100%);box-shadow:var(--shadow-sm),var(--error-glow)}
+/* ALERTS */
+.abox{border-radius:var(--radius-md);padding:14px 18px;font-size:13px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start;box-shadow:var(--shadow);transition:var(--transition)}
+.abox:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.ag{background:linear-gradient(135deg,rgba(16,185,129,.08) 0%,rgba(16,185,129,.04) 100%);border:1.5px solid var(--success);color:#065f46}
+.ai{background:linear-gradient(135deg,rgba(79,70,229,.08) 0%,rgba(79,70,229,.04) 100%);border:1.5px solid var(--accent);color:var(--accent-dark)}
+.ao{background:linear-gradient(135deg,rgba(245,158,11,.08) 0%,rgba(245,158,11,.04) 100%);border:1.5px solid var(--warning);color:#92400e}
+.ar{background:linear-gradient(135deg,rgba(239,68,68,.08) 0%,rgba(239,68,68,.04) 100%);border:1.5px solid var(--error);color:#991b1b}
+/* FICHE LIST CARDS */
+.fiche-list{display:flex;flex-direction:column;gap:12px}
+.fiche-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-sm);position:relative;overflow:hidden;display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.fiche-card::before{content:'';position:absolute;top:0;left:0;width:5px;height:100%;background:var(--neutral-light);transition:width var(--transition),background var(--transition)}
+.fiche-card.tag-urgent::before{background:linear-gradient(to bottom,var(--error) 0%,var(--error-light) 100%)}
+.fiche-card.tag-prioritaire::before{background:linear-gradient(to bottom,var(--warning) 0%,var(--warning-light) 100%)}
+.fiche-card.tag-sans_operation::before{background:linear-gradient(to bottom,var(--neutral) 0%,var(--neutral-light) 100%)}
+.fiche-card.statut-signee::before{background:linear-gradient(to bottom,var(--success) 0%,var(--success-light) 100%)}
+.fiche-card.statut-rejetee::before{background:linear-gradient(to bottom,var(--error-dark) 0%,var(--error) 100%)}
+.fiche-card:hover{box-shadow:var(--shadow-card-hover);transform:translateY(-4px);border-color:var(--border-dark)}
+.fiche-card:hover::before{width:7px}
+.fiche-card:active{transform:translateY(-1px) !important;box-shadow:var(--shadow-sm) !important;transition:transform var(--transition-fast),box-shadow var(--transition-fast)}
+.fiche-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:var(--radius-sm);white-space:nowrap;transition:all var(--transition)}
+.tag-urgent .fiche-tag{background:rgba(239,68,68,.1);color:var(--error-dark);border:1px solid rgba(239,68,68,.3)}
+.tag-prioritaire .fiche-tag{background:rgba(245,158,11,.1);color:var(--warning-dark);border:1px solid rgba(245,158,11,.3)}
+.tag-sans_operation .fiche-tag{background:rgba(100,116,139,.1);color:var(--neutral-dark);border:1px solid var(--border)}
+.statut-signee .fiche-tag{background:rgba(16,185,129,.1);color:var(--success-dark);border:1px solid rgba(16,185,129,.3)}
+.statut-rejetee .fiche-tag{background:rgba(239,68,68,.1);color:var(--error-dark);border:1px solid rgba(239,68,68,.3)}
+.fiche-body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fiche-line1{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fiche-ref{font-family:'JetBrains Mono','Courier New',monospace;font-size:12px;font-weight:600;color:var(--accent);background:rgba(79,70,229,.08);padding:2px 9px;border-radius:var(--radius-sm);border:1px solid rgba(79,70,229,.15)}
+.fiche-client{font-size:15px;font-weight:700;color:var(--text-primary);letter-spacing:-.01em}
+.fiche-line2{font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fiche-line2 .meta{display:flex;align-items:center;gap:5px}
+.fiche-line2 .meta strong{color:var(--text-primary);font-weight:600}
+.fiche-line3{font-size:12px;color:var(--text-muted);font-style:italic}
+.fiche-arrow{font-size:22px;color:var(--border-dark);transition:all var(--transition)}
+.fiche-card:hover .fiche-arrow{color:var(--accent);transform:translateX(5px)}
+.empty-state{text-align:center;padding:70px 40px;color:var(--text-muted);background:linear-gradient(160deg,rgba(79,70,229,.04) 0%,var(--surface) 40%,rgba(16,185,129,.03) 100%);border-radius:var(--radius-xl);border:2px dashed var(--border);margin:20px 0;transition:border-color var(--transition)}
+.empty-state:hover{border-color:var(--accent-light)}
+.empty-state .ico{font-size:52px;margin-bottom:16px;opacity:.35;display:block;filter:grayscale(.3)}
+.empty-state .ttl{font-size:15px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;letter-spacing:-.01em}
+/* DETAIL VIEW */
+.detail-header{background:var(--surface);border:1.5px solid var(--border);border-left:5px solid var(--accent);border-radius:var(--radius-md);padding:20px 24px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;box-shadow:var(--shadow)}
+.detail-header-info h2{font-size:19px;color:var(--primary);font-weight:700;letter-spacing:-.025em;margin-bottom:4px}
+.detail-header-info .meta{font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.detail-header-info .meta span{display:flex;align-items:center;gap:5px}
+.btn-back{padding:10px 18px;font-size:13px;font-weight:600;color:var(--text-secondary);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-sm);font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.btn-back:hover{color:var(--accent);border-color:var(--accent);transform:translateX(-4px);box-shadow:var(--shadow)}
+/* CARDS */
+.card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:26px;margin-bottom:18px;box-shadow:var(--shadow);transition:box-shadow var(--transition),transform var(--transition),border-color var(--transition);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent-dark) 0%,var(--accent) 40%,var(--accent-light) 70%,transparent 100%);opacity:0;transition:opacity 0.3s ease}
+.card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:var(--border-dark)}
+.card:hover::before{opacity:1}
+.card-title{font-size:12px;font-weight:700;color:var(--text-primary);text-transform:uppercase;letter-spacing:.1em;margin-bottom:18px;padding-bottom:14px;border-bottom:1.5px solid var(--border-light);display:flex;align-items:center;gap:10px;position:relative}
+.card-title::after{content:'';position:absolute;bottom:-2px;left:0;width:48px;height:2px;background:linear-gradient(to right,var(--accent) 0%,var(--accent-light) 100%);border-radius:2px}
+.card-icon{width:26px;height:26px;background:linear-gradient(135deg,var(--accent-light) 0%,var(--accent) 100%);border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:#fff;box-shadow:var(--shadow-sm)}
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px}
+.full{grid-column:1/-1}.span2{grid-column:span 2}.span3{grid-column:span 3}
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:11.5px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:6px}
+.field label::before{content:'';width:3px;height:3px;background:var(--accent);border-radius:50%;opacity:.7}
+.field input,.field select,.field textarea{width:100%;padding:11px 15px;font-size:14px;font-family:inherit;color:var(--text-primary);background:var(--surface-raised);border:1.5px solid var(--border);border-radius:var(--radius);outline:none;transition:all var(--transition);box-shadow:var(--shadow-sm)}
+.field select{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  appearance:none;
+  background-color:var(--surface-raised);
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 14px center;
+  background-size:16px;
+  padding-right:40px;
+  cursor:pointer;
+}
+.field select:focus{
+  background-color:var(--surface);
+}
+.field select:disabled{
+  background-color:var(--background);
+  color:var(--text-muted);
+  cursor:not-allowed;
+  opacity:1;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow),var(--shadow-sm);background:var(--surface);transform:translateY(-1px)}
+.field input:hover:not(:focus),.field select:hover:not(:focus),.field textarea:hover:not(:focus){border-color:var(--border-dark)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.65;font-family:inherit}
+.field input[readonly]{background:var(--background);color:var(--text-muted);cursor:not-allowed}
+.field input[readonly]:focus{box-shadow:none;transform:none;border-color:var(--border)}
+/* RAPPORT BOX */
+.rapport-box{background:linear-gradient(135deg,#fafbfc 0%,var(--surface-raised) 100%);border:1.5px solid var(--border);border-left:5px solid var(--accent);border-radius:var(--radius);padding:24px;white-space:pre-wrap;font-family:'Inter',sans-serif;font-size:13px;line-height:1.8;color:var(--text-primary);box-shadow:inset 0 2px 6px rgba(15,23,42,.04);max-height:400px;overflow-y:auto}
+/* DECISION MODULE */
+.decision-card{background:linear-gradient(135deg,rgba(16,185,129,.05) 0%,rgba(16,185,129,.02) 100%);border:1.5px solid var(--success);border-left:5px solid var(--success);border-radius:var(--radius-lg);padding:26px;margin-top:22px;box-shadow:var(--shadow),var(--shadow-success);position:relative;overflow:hidden}
+.decision-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(to right,var(--success) 0%,var(--success-light) 100%)}
+.decision-title{font-size:13px;font-weight:700;color:var(--success-dark);text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:10px;padding-bottom:12px;border-bottom:1.5px solid rgba(16,185,129,.2)}
+.decision-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:end}
+/* BTNS */
+.btn-sign{padding:14px 30px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--success) 0%,var(--success-dark) 100%);border:none;border-radius:var(--radius-md);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow),var(--shadow-success);font-family:inherit;display:inline-flex;align-items:center;gap:10px;letter-spacing:.025em;position:relative;overflow:hidden}
+.btn-sign:hover{background:linear-gradient(135deg,var(--success-dark) 0%,#047857 100%);transform:translateY(-3px);box-shadow:var(--shadow-md),0 12px 28px var(--success-glow)}
+.btn-sign:active{transform:translateY(0) scale(0.97) !important;box-shadow:var(--shadow-sm) !important}
+.btn-sign:disabled{background:var(--neutral-light);cursor:not-allowed;transform:none;box-shadow:var(--shadow-sm);opacity:.7}
+.btn-reject{padding:14px 30px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--error) 0%,var(--error-dark) 100%);border:none;border-radius:var(--radius-md);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow),var(--error-glow);font-family:inherit;display:inline-flex;align-items:center;gap:10px;letter-spacing:.025em;position:relative;overflow:hidden}
+.btn-reject:hover{background:linear-gradient(135deg,var(--error-dark) 0%,#b91c1c 100%);transform:translateY(-3px);box-shadow:var(--shadow-md),0 12px 28px var(--error-glow)}
+.btn-reject:active{transform:translateY(0) scale(0.97) !important;box-shadow:var(--shadow-sm) !important}
+.btn-confirm-reject{padding:13px 24px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(135deg,var(--error) 0%,var(--error-dark) 100%);border:none;border-radius:var(--radius);cursor:pointer;transition:all var(--transition);box-shadow:var(--shadow-sm);font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.btn-confirm-reject:hover{transform:translateY(-2px);box-shadow:var(--shadow),var(--error-glow)}
+.btn-confirm-reject:active{transform:scale(0.97) !important}
+.btn-cancel{padding:13px 20px;font-size:14px;font-weight:600;color:var(--text-secondary);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all var(--transition);font-family:inherit}
+.btn-cancel:hover{color:var(--text-primary);border-color:var(--neutral);transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.btn-cancel:active{transform:scale(0.97) !important}
+.pill:active{transform:scale(0.95) !important;transition:transform var(--transition-fast) !important}
+.typo-btn:not(.active):active{transform:translateY(0) scale(0.97) !important;transition:transform var(--transition-fast) !important}
+.btn-back:active{transform:translateX(-2px) scale(0.97) !important}
+.action-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1.5px dashed var(--border)}
+.action-row .sep{flex:1;text-align:center;font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+/* REJECT MODULE */
+.reject-module{background:linear-gradient(135deg,rgba(239,68,68,.07) 0%,rgba(239,68,68,.02) 100%);border:1.5px solid var(--error);border-left:5px solid var(--error);border-radius:var(--radius-lg);padding:22px;margin-top:18px;box-shadow:var(--shadow),var(--error-glow);animation:slideDown .3s ease-out}
+@keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.reject-title{font-size:13px;font-weight:700;color:var(--error-dark);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.reject-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+/* HISTORICAL DECISION DISPLAY */
+.histo-decision{background:linear-gradient(135deg,var(--surface-hover) 0%,var(--surface) 100%);border:1.5px solid var(--border);border-left:5px solid var(--neutral);border-radius:var(--radius-md);padding:18px 22px;margin-top:18px;font-size:13px}
+.histo-decision.signed{border-left-color:var(--success);background:linear-gradient(135deg,rgba(16,185,129,.04) 0%,var(--surface) 100%)}
+.histo-decision.rejected{border-left-color:var(--error);background:linear-gradient(135deg,rgba(239,68,68,.04) 0%,var(--surface) 100%)}
+.histo-decision-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:10px}
+.histo-decision-value{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:8px}
+.histo-decision .signed-by{font-size:12px;color:var(--text-secondary);font-style:italic}
+.histo-motif{margin-top:12px;padding:12px 14px;background:rgba(239,68,68,.05);border-radius:var(--radius);font-size:13px;color:var(--error-dark);border-left:3px solid var(--error)}
+.histo-motif strong{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px;font-weight:700}
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;z-index:1000;background:var(--surface);border:1.5px solid var(--success);border-left:5px solid var(--success);border-radius:var(--radius-md);padding:14px 20px;box-shadow:var(--shadow-lg),var(--shadow-success);display:flex;align-items:center;gap:12px;font-size:14px;font-weight:600;color:var(--success-dark);min-width:280px;animation:toastIn .35s cubic-bezier(0.34,1.56,0.64,1);max-width:420px}
+.toast.toast-error{border-color:var(--error);border-left-color:var(--error);color:var(--error-dark);box-shadow:var(--shadow-lg),var(--error-glow)}
+.toast.toast-info{border-color:var(--accent);border-left-color:var(--accent);color:var(--accent-dark);box-shadow:var(--shadow-lg),var(--shadow-accent)}
+@keyframes toastIn{from{opacity:0;transform:translateX(120%) scale(0.9)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes toastOut{from{opacity:1;transform:translateX(0) scale(1)}to{opacity:0;transform:translateX(120%) scale(0.9)}}
+.toast.fade-out{animation:toastOut .3s ease-in forwards}
+/* BADGE LATERAL (TYPO) */
+.typo-badge{display:inline-block;padding:3px 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;border-radius:var(--radius-sm)}
+.typo-badge.pthr{background:rgba(245,158,11,.12);color:var(--warning-dark);border:1px solid rgba(245,158,11,.3)}
+.typo-badge.ppe{background:rgba(79,70,229,.1);color:var(--accent-dark);border:1px solid rgba(79,70,229,.25)}
+/* RESPONSIVE */
+@media (max-width:900px){
+  .main{padding:16px}
+  .card{padding:18px}
+  .g2,.g3,.g4{grid-template-columns:1fr;gap:12px}
+  .span2,.span3{grid-column:1/-1}
+  .fiche-card{grid-template-columns:1fr;gap:10px}
+  .fiche-arrow{display:none}
+  .hdr-inner{flex-direction:column;gap:10px;text-align:center}
+  .typo-inner{justify-content:center}
+  .tabs{flex-wrap:wrap}
+  .tab{padding:10px 14px;font-size:13px}
+  .decision-row{grid-template-columns:1fr}
+}
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fiche-card{animation:fadeIn .28s ease-out}
+/* RIPPLE */
+.ripple-host{position:relative;overflow:hidden}
+.ripple-wave{position:absolute;border-radius:50%;background:rgba(255,255,255,.22);transform:scale(0);animation:ripple .55s cubic-bezier(0,0,0.2,1);pointer-events:none}
+@keyframes ripple{0%{transform:scale(0);opacity:.8}100%{transform:scale(3.8);opacity:0}}
+/* FOCUS ACCESSIBILITY */
+*:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--radius-sm)}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--background)}
+::-webkit-scrollbar-thumb{background:linear-gradient(to bottom,var(--neutral-light) 0%,var(--neutral) 100%);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(to bottom,var(--neutral) 0%,var(--neutral-dark) 100%)}
+/* ═══════════════════════════════════════════════════
+   CUSTOM CHECKBOXES & RADIOS — Premium Style
+═══════════════════════════════════════════════════ */
+input[type="checkbox"],
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 17px !important;
+  height: 17px !important;
+  min-width: 17px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 2px solid var(--border-dark) !important;
+  border-radius: 4px !important;
+  background: var(--surface) !important;
+  box-shadow: none !important;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+  vertical-align: -3px;
+  transition: border-color var(--transition-fast), background var(--spring-fast), transform var(--spring-fast), box-shadow var(--transition-fast);
+}
+input[type="radio"] {
+  border-radius: 50% !important;
+}
+input[type="checkbox"]:hover,
+input[type="radio"]:hover {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(79,70,229,.10) !important;
+}
+input[type="checkbox"]:checked {
+  background: linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%) !important;
+  border-color: var(--accent-dark) !important;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px rgba(79,70,229,.18) !important;
+}
+input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 4px;
+  width: 5px;
+  height: 8px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+  animation: checkPop var(--spring-fast) both;
+}
+@keyframes checkPop {
+  from { transform: rotate(45deg) scale(0); opacity: 0; }
+  to   { transform: rotate(45deg) scale(1); opacity: 1; }
+}
+input[type="radio"]:checked {
+  background: linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%) !important;
+  border-color: var(--accent-dark) !important;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px rgba(79,70,229,.18) !important;
+}
+input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  border-radius: 50%;
+  animation: radioPop var(--spring-fast) both;
+}
+@keyframes radioPop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+input[type="checkbox"]:disabled,
+input[type="radio"]:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none !important;
+}
+/* Labels contenant des inputs — reset du style champ-titre */
+.field div > label,
+.field label:has(input[type="checkbox"]),
+.field label:has(input[type="radio"]) {
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 500 !important;
+  color: var(--text-primary) !important;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px !important;
+  cursor: pointer;
+  white-space: normal;
+}
+.field div > label::before,
+.field label:has(input[type="checkbox"])::before,
+.field label:has(input[type="radio"])::before {
+  display: none !important;
+}
+/* ════════════════════════════════
+   PAGINATION
+════════════════════════════════ */
+.pagination-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+.pg-numbers{display:flex;gap:6px;flex-wrap:wrap}
+.pg-btn{padding:8px 14px;font-size:13px;font-weight:600;font-family:inherit;color:var(--text-secondary);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all var(--transition);min-width:40px}
+.pg-btn:hover:not(:disabled):not(.pg-active){border-color:var(--border-dark);color:var(--text-primary)}
+.pg-btn:disabled{opacity:.4;cursor:not-allowed}
+.pg-active{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);color:#fff;border-color:transparent;pointer-events:none}
+.pagination-info{text-align:center;font-size:12px;color:var(--text-muted);margin-top:10px}
+/* Éléments réservés à l'impression — masqués à l'écran */
+.print-only { display: none; }
+/* ═══════════════════════════════════════════════════
+   MODE IMPRESSION (EXPORT PDF WORD-LIKE)
+═══════════════════════════════════════════════════ */
+@media print {
+    @page { size: A4 portrait; margin: 14mm 12mm 22mm 12mm; }
+    /* Conservation des couleurs et fonds */
+    html, body, * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    body, .main {
+        background: #fff !important; color: #000 !important;
+        font-family: 'Times New Roman', Times, serif !important;
+        font-size: 11pt !important; padding: 0 !important;
+        max-width: 100% !important;
+    }
+    /* Masquage des éléments d'interface */
+    .hdr, .typo-bar, .tabs-wrap, .btn-back, .btn-cancel, .abox,
+    .subfilter-bar, .btn-save, .btn-accueil, #autosave-time,
+    .action-row, .reject-module, button,
+    #toast-zone, #home-view, #list-view {
+        display: none !important;
+    }
+    /* Éléments réservés à l'impression — visibles uniquement en PDF */
+    .print-only { display: block !important; }
+    /* Pied de page fixe répété sur chaque page */
+    .print-footer {
+        display: block !important;
+        position: fixed !important;
+        bottom: 0 !important; left: 0 !important; right: 0 !important;
+        padding: 6px 12mm !important;
+        border-top: 1px solid #999 !important;
+        background: #fff !important;
+        text-align: center !important;
+        font-size: 9pt !important;
+        color: #333 !important;
+    }
+    /* En-tête officiel */
+    .detail-header {
+        background: transparent !important; border: none !important;
+        border-bottom: 2px solid #000 !important; padding: 0 0 10px 0 !important;
+        margin-bottom: 25px !important; box-shadow: none !important; text-align: center;
+        break-inside: avoid; page-break-inside: avoid;
+    }
+    .detail-header h2 { font-size: 16pt !important; color: #000 !important; margin-bottom: 5px !important; text-transform: uppercase; }
+    .typo-badge, .fiche-tag { display: inline-block !important; font-size: 11pt !important; border: 1px solid #000 !important; padding: 2px 6px !important; color: #000 !important; background: transparent !important; }
+    /* Sections (Cartes) */
+    .card {
+        border: none !important; padding: 0 !important; margin-bottom: 12px !important;
+        box-shadow: none !important; background: transparent !important;
+        break-inside: avoid; page-break-inside: avoid;
+        border-bottom: 1px solid #ddd !important;
+    }
+    .card-title {
+        color: #000 !important; font-size: 12pt !important; font-weight: bold !important;
+        text-decoration: underline; margin-bottom: 10px !important; padding: 0 !important;
+        text-transform: none !important; border: none !important;
+    }
+    .card-title::after, .card-icon { display: none !important; }
+    /* Grilles et Champs */
+    .g2, .g3, .g4 { display: block !important; }
+    .field { margin-bottom: 8px !important; display: block !important; }
+    .field label { color: #000 !important; font-weight: bold !important; font-size: 10pt !important; margin-right: 8px !important; }
+    .field label::before { display: none !important; }
+    /* Champs en lecture seule — rendu texte propre sans grisé */
+    input[readonly], .field input[readonly] {
+        border: none !important; border-bottom: 1px dotted #999 !important;
+        border-radius: 0 !important; background: transparent !important;
+        box-shadow: none !important; color: var(--text-primary) !important;
+        font-size: 11pt !important; height: auto !important; -webkit-text-fill-color: #000 !important;
+    }
+    select:disabled, .field select:disabled {
+        -webkit-appearance: none !important; appearance: none !important;
+        border: none !important; border-bottom: 1px solid #ccc !important;
+        border-radius: 0 !important; background: transparent !important;
+        box-shadow: none !important; color: #000 !important; -webkit-text-fill-color: #000 !important;
+        font-size: 11pt !important; height: auto !important; padding-right: 0 !important; opacity: 1 !important;
+    }
+    textarea[readonly], .field textarea[readonly] {
+        border: none !important; background: transparent !important; font-family: inherit !important;
+        font-size: 11pt !important; width: 100% !important; overflow: visible !important;
+        height: auto !important; max-height: none !important; min-height: auto !important;
+        color: #000 !important; -webkit-text-fill-color: #000 !important;
+        white-space: pre-wrap !important; word-break: break-word !important;
+        resize: none !important;
+    }
+    /* Entrées de texte génériques */
+    .field input[type="text"], .field input[type="date"], .field input[type="number"] {
+        border: none !important; border-bottom: 1px dotted #000 !important;
+        border-radius: 0 !important; background: transparent !important;
+        box-shadow: none !important; color: #000 !important;
+        font-size: 11pt !important; height: auto !important; width: auto !important; min-width: 100px;
+    }
+    /* Select générique */
+    .field select {
+        -webkit-appearance: none !important; appearance: none !important;
+        border: none !important; border-bottom: 1px solid #ccc !important;
+        border-radius: 0 !important; background: transparent !important;
+        box-shadow: none !important; color: #000 !important;
+        font-size: 11pt !important; height: auto !important; padding-right: 0 !important;
+    }
+    /* Textareas génériques */
+    .field textarea {
+        border: none !important; background: transparent !important; font-family: inherit !important;
+        font-size: 11pt !important; width: 100% !important; overflow: visible !important;
+        height: auto !important; max-height: none !important; min-height: auto !important;
+        color: #000 !important; white-space: pre-wrap !important;
+        word-break: break-word !important; word-wrap: break-word !important;
+        resize: none !important; page-break-inside: auto;
+    }
+    /* Checkboxes style Word ☒ */
+    input[type="checkbox"], input[type="radio"] {
+        -webkit-appearance: none !important; appearance: none !important;
+        width: 12px !important; height: 12px !important; border: 1px solid #000 !important;
+        position: relative; top: 2px; margin-right: 5px !important; padding: 0 !important;
+        box-shadow: none !important; flex-shrink: 0;
+    }
+    input[type="checkbox"]:checked::after, input[type="radio"]:checked::after {
+        content: 'X'; position: absolute; top: -4px; left: 1px; font-size: 12px; font-weight: bold;
+    }
+    /* Bloc Déontologie et Bloc Décision */
+    .decision-card, .histo-decision {
+        border: 1px solid #000 !important; padding: 15px !important; margin-top: 20px !important;
+        break-inside: avoid; page-break-inside: avoid;
+        background: transparent !important; border-radius: 0 !important; box-shadow: none !important;
+    }
+    .abox { break-inside: avoid; page-break-inside: avoid; }
+    .decision-title { color: #000 !important; font-size: 12pt !important; font-weight: bold !important; }
+    .histo-decision-title, .histo-decision-value { color: #000 !important; }
+    .histo-motif {
+        background: transparent !important; border-left: 2px solid #000 !important;
+        padding-left: 10px !important; color: #000 !important;
+    }
+    .signed-by { font-style: italic; font-size: 10pt; margin-top: 6px; }
+    /* Le gestionnaire beforeprint synchronise la visibilité des wrap_* avant impression */
+}
+/* ── Modale de confirmation custom ─────────────────── */
+.confirm-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:9999;animation:confirmFade .15s ease}
+@keyframes confirmFade{from{opacity:0}to{opacity:1}}
+.confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);max-width:440px;width:calc(100% - 48px);padding:28px;text-align:center;animation:confirmPop .18s cubic-bezier(0.34,1.56,0.64,1)}
+@keyframes confirmPop{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
+.confirm-icon{display:flex;justify-content:center;margin-bottom:14px;color:var(--accent)}
+.confirm-icon svg{width:40px;height:40px}
+.confirm-title{font-size:17px;font-weight:700;color:var(--text-primary);margin-bottom:10px}
+.confirm-message{font-size:14px;line-height:1.55;color:var(--text-secondary);margin-bottom:24px;white-space:pre-line}
+.confirm-actions{display:flex;gap:12px;justify-content:center}
+.confirm-btn{padding:11px 22px;font-size:14px;font-weight:600;font-family:inherit;border-radius:var(--radius);cursor:pointer;transition:all var(--transition);border:1.5px solid transparent;min-width:120px}
+.confirm-btn-cancel{background:var(--surface);border-color:var(--border);color:var(--text-secondary)}
+.confirm-btn-cancel:hover{border-color:var(--border-dark);color:var(--text-primary)}
+.confirm-btn-ok{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-dark) 100%);color:#fff}
+.confirm-btn-ok:hover{filter:brightness(1.07)}
+.confirm-btn-ok.danger{background:#fff;border-color:var(--error);color:var(--error-dark)}
+.confirm-btn-ok.danger:hover{background:rgba(239,68,68,.08)}
+</style>
+</head>
+<body><div id="alex-status" role="status" aria-live="polite" style="padding:12px 20px;background:#eef2ff;font:14px system-ui">Chargement SharePoint…</div><script>const alexSession = new Map();
+const sessionStorage = {getItem:k=>alexSession.get(k)||null,setItem:(k,v)=>alexSession.set(k,String(v)),removeItem:k=>alexSession.delete(k)};
+const AlexBridge=(()=>{
+  let sequence=0;const pending=new Map();let dirty=false;
+  const status=(text,error=false)=>{let e=document.getElementById('alex-status');if(e){e.textContent=text;e.style.background=error?'#fee2e2':'#eef2ff';}};
+  function rpc(action,payload){return new Promise((resolve,reject)=>{
+    const id=++sequence;const timer=setTimeout(()=>{pending.delete(id);reject(new Error('Délai SharePoint dépassé. Rechargez les dossiers pour vérifier si l’enregistrement a abouti avant de réessayer.'));},120000);
+    pending.set(id,{resolve,reject,timer});parent.postMessage({alex:true,id,action,payload},'*');
+  });}
+  window.addEventListener('message',e=>{if(e.source!==parent||!e.data?.alex)return;const p=pending.get(e.data.id);if(p){clearTimeout(p.timer);pending.delete(e.data.id);if(e.data.error)p.reject(new Error(e.data.error));else p.resolve(e.data.result);}if(e.data.action==='refresh')window.alexRefresh?.();});
+  function markDirty(value=true){dirty=value;parent.postMessage({alex:true,action:'dirty',payload:value},'*');if(value)status('Modifications non enregistrées');}
+  document.addEventListener('input',()=>markDirty());document.addEventListener('change',()=>markDirty());
+  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
+  window.addEventListener('unhandledrejection',e=>{status(e.reason?.message||'Action impossible',true);});
+  return {rpc,status,markDirty};
+})();
+
+// Strict allowlist for read-only snapshots. No scripts, links, media or style attributes.
+const DOMPurify={sanitize(html){
+  const source=new DOMParser().parseFromString(String(html),'text/html');
+  const tags=new Set('DIV SPAN P STRONG EM B I U BR HR H1 H2 H3 H4 LABEL INPUT TEXTAREA SELECT OPTION TABLE THEAD TBODY TR TH TD UL OL LI SECTION FIELDSET LEGEND'.split(' '));
+  const attrs=new Set(['class','type','value','checked','selected','disabled','readonly','colspan','rowspan']);
+  function clean(node){for(const child of [...node.children]){if(!tags.has(child.tagName)){child.remove();continue;}for(const a of [...child.attributes])if(!attrs.has(a.name))child.removeAttribute(a.name);clean(child);}}
+  clean(source.body);return source.body.innerHTML;
+}};
+</script>
+<!-- ═══ SPRITE SVG ICÔNES (Lucide, inline, aucune dépendance externe) ═══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+    <symbol id="i-landmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol>
+    <symbol id="i-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol>
+    <symbol id="i-pen-line" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/></symbol>
+    <symbol id="i-corner-up-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></symbol>
+    <symbol id="i-file-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></symbol>
+  </defs>
+</svg>
+<!-- ═══════════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════════ -->
+<div class="hdr">
+  <div class="hdr-inner">
+    <div style="display:flex;align-items:center">
+      <div class="hdr-logo">M</div>
+      <div class="hdr-info">
+        <div class="hdr-title">FICHES DOM SENSIBLES et PPE/RCA – SF</div>
+        <div class="hdr-id" id="hdr-context">Centralisation & validation des fiches SF</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="btn-accueil" onclick="goHome()"><svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-home"></use></svg> Accueil</button>
+      <span id="autosave-time" class="autosave-text"></span>
+      <button class="btn-save" onclick="saveApp(false)"><svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-save"></use></svg> Enregistrer</button>
+      <span style="font-size:12px;color:rgba(255,255,255,.7);font-weight:500">Conformité</span>
+      <div class="rgpd-pill"><div class="rgpd-dot"></div>Session Responsable</div>
+    </div>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════
+     TYPOLOGIE (Niveau 1)
+═══════════════════════════════════════════════════ -->
+<div class="typo-bar">
+  <div class="typo-inner">
+    <span class="typo-label">Typologie</span>
+    <button class="typo-btn active" data-typo="pthr" onclick="setTypology('pthr')">
+      <span class="ico"><svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-globe"></use></svg></span>
+      <span>Domiciliations sensibles</span>
+      <span class="count" id="typo-count-pthr">0</span>
+    </button>
+    <button class="typo-btn" data-typo="ppe" onclick="setTypology('ppe')">
+      <span class="ico"><svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-landmark"></use></svg></span>
+      <span>PPE / RCA</span>
+      <span class="count" id="typo-count-ppe">0</span>
+    </button>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════
+     ONGLETS STATUT (Niveau 2)
+═══════════════════════════════════════════════════ -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" data-status="a_traiter" onclick="setStatus('a_traiter')">
+      <svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-inbox"></use></svg>
+      À traiter <span class="badge" id="badge-a-traiter">0</span>
+      <div class="tab-tooltip" id="tooltip-a-traiter">
+        <div style="font-weight:700; margin-bottom:4px; border-bottom:1px solid rgba(255,255,255,.2)">Détail des urgences</div>
+        <div>Urgent : <span id="tooltip-urgent">0</span></div>
+        <div>Prioritaire : <span id="tooltip-prio">0</span></div>
+        <div>Sans op. : <span id="tooltip-sans">0</span></div>
+      </div>
+    </button>
+    <button class="tab" data-status="historique" onclick="setStatus('historique')">
+      <svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-archive"></use></svg> Historique <span class="badge" id="badge-historique">0</span>
+    </button>
+    <button class="tab" id="tab-stats" onclick="openStats()"><svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-info"></use></svg> Statistiques</button>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════
+     CONTENU PRINCIPAL
+═══════════════════════════════════════════════════ -->
+<div class="main">
+  <!-- VUE ACCUEIL -->
+  <div id="home-view" class="home-wrap">
+    <div class="home-title">Portail signature de fiches</div>
+    <div class="home-subtitle">Sélectionnez la typologie de fiches à traiter</div>
+    <div class="home-cards">
+      <div class="home-card" onclick="setTypology('pthr')">
+        <div class="ico">🌍</div>
+        <div class="ttl">Fiches domiciliations sensibles</div>
+      </div>
+      <div class="home-card" onclick="setTypology('ppe')">
+        <div class="ico">🏛️</div>
+        <div class="ttl">Fiches PPE / RCA</div>
+      </div>
+    </div>
+  </div>
+  <!-- VUE LISTE -->
+  <div id="list-view" style="display:none">
+    <div class="abox ai" id="info-banner">
+      <span style="font-size:18px;display:inline-flex"><svg width="18" height="18" aria-hidden="true"><use href="#i-info"></use></svg></span>
+      <div id="info-banner-text"><strong>Mode liste</strong> — Cliquez sur une fiche pour ouvrir la vue détail et la statuer.</div>
+    </div>
+    <!-- Sous-filtres À traiter (tags) -->
+    <div class="subfilter-bar" id="filter-tags">
+      <span class="subfilter-label">Filtres</span>
+      <button class="pill active" data-tag="all" onclick="setTag('all')">Toutes <span class="pcount" id="cnt-all">0</span></button>
+      <button class="pill tag-urgent" data-tag="urgent" onclick="setTag('urgent')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--error);margin-right:5px;vertical-align:middle"></span>Urgent <span class="pcount" id="cnt-urgent">0</span></button>
+      <button class="pill tag-prio" data-tag="prioritaire" onclick="setTag('prioritaire')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-right:5px;vertical-align:middle"></span>Prioritaire <span class="pcount" id="cnt-prioritaire">0</span></button>
+      <button class="pill tag-sans" data-tag="sans_operation" onclick="setTag('sans_operation')"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--neutral);margin-right:5px;vertical-align:middle"></span>Sans opération <span class="pcount" id="cnt-sans_operation">0</span></button>
+    </div>
+    <!-- Sous-onglets Historique -->
+    <div class="subfilter-bar" id="filter-histo" style="display:none">
+      <span class="subfilter-label">Historique</span>
+      <button class="pill histo-signed active" data-histo="signee" onclick="setHisto('signee')"><svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-check-circle"></use></svg> Signées <span class="pcount" id="cnt-signee">0</span></button>
+      <button class="pill histo-rejected" data-histo="rejetee" onclick="setHisto('rejetee')"><svg width="15" height="15" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-x-circle"></use></svg> Rejetées <span class="pcount" id="cnt-rejetee">0</span></button>
+    </div>
+    <!-- Tri & filtre par analyste (transverse) -->
+    <div class="subfilter-bar" id="filter-sort-bar">
+      <span class="subfilter-label">Recherche</span>
+      <input type="text" id="input-search" oninput="setSearch(this.value)" placeholder="Nom, prénom, référence, analyste…" style="padding:8px 14px;font-size:13px;font-family:inherit;color:var(--text-primary);background:var(--surface);border:2px solid var(--border);border-radius:24px;outline:none;transition:all var(--transition);min-width:280px">
+      <span class="subfilter-label">Analyste</span>
+      <select id="select-analyste" onchange="setAnalysteFilter(this.value)" style="padding:8px 14px;font-size:13px;font-weight:600;font-family:inherit;color:var(--text-primary);background:var(--surface);border:2px solid var(--border);border-radius:24px;cursor:pointer;outline:none;transition:all var(--transition);min-width:180px">
+        <option value="all">Tous les analystes</option>
+      </select>
+      <span class="subfilter-label" style="margin-left:14px">Trier par</span>
+      <select id="select-sort" onchange="setSortBy(this.value)" style="padding:8px 14px;font-size:13px;font-weight:600;font-family:inherit;color:var(--text-primary);background:var(--surface);border:2px solid var(--border);border-radius:24px;cursor:pointer;outline:none;transition:all var(--transition);min-width:200px">
+        <option value="date_desc">Date (plus récente)</option>
+        <option value="date_asc">Date (plus ancienne)</option>
+      </select>
+    </div>
+    <!-- Liste des fiches -->
+    <div id="fiches-list" class="fiche-list"></div>
+  </div>
+  <!-- VUE DETAIL -->
+  <div id="detail-view" style="display:none"></div>
+  <!-- VUE STATS -->
+  <div id="stats-view" style="display:none; padding-top: 20px;"></div>
+</div>
+<!-- ZONE TOAST -->
+<div id="toast-zone"></div>
+<script>
+/* ═══════════════════════════════════════════════════
+   JEU DE DONNÉES FACTICES (simulation BDD)
+═══════════════════════════════════════════════════ */
+const DEONTO_AVIS_LABELS = {
+  'favorable':      'Avis favorable pour la poursuite de la relation',
+  'favorable_1an':  'Avis favorable pour la poursuite de la relation avec réévaluation à 1 an',
+  'defavorable':    'Avis défavorable pour la poursuite de la relation'
+};
+const DECISIONS_LABELS = {
+  'entree_accord_sans': 'Accord pour l\u2019entrée en relation sans mise sous surveillance',
+  'entree_accord_avec': 'Accord pour l\u2019entrée en relation avec mise sous surveillance',
+  'entree_refus':     'Refus de l\u2019entrée en relation',
+  'poursuite_sans':   'Poursuite de la relation sans mise sous surveillance',
+  'poursuite_avec':   'Poursuite de la relation avec mise sous surveillance',
+  'rupture':          'Rupture de la relation d\u2019affaires'
+};
+const TAG_LABELS = {
+  'urgent':         'Urgent',
+  'prioritaire':    'Prioritaire',
+  'sans_operation': 'Sans opération'
+};
+/* ═════════════════════════════════════════════════════
+   CHARGEMENT DES FICHES (backend Node.js + SQLite — server-fiches/)
+   Les 80 fiches de démonstration ne sont plus générées ici : c'est désormais
+   server-fiches/seed.js qui les crée une seule fois côté serveur, au tout premier
+   démarrage (si la base est vide). Ce fichier se contente de les récupérer via l'API.
+═════════════════════════════════════════════════════ */
+let fiches = [];
+async function apiGetFiches(){return AlexBridge.rpc('loadManager');}
+async function apiSaveFiche(f){await AlexBridge.rpc('saveManager',f);return true;}
+function apiSaveFicheBeacon(){}
+async function initFiches(){
+  const loaded = await apiGetFiches();
+  if(loaded === null){
+    fiches = [];
+    showToast('Chargement SharePoint impossible. Vérifiez vos droits et actualisez.', 'error');
+    return;
+  }
+  fiches = loaded;
+  // Garde-fou anti-collision d'ID (défense en profondeur, coût négligeable)
+  const knownIds = new Set();
+  fiches.forEach(f => {
+    if (knownIds.has(f.id)) {
+      f.id = f.id + '_' + Math.random().toString(36).substring(2, 7);
+    }
+    knownIds.add(f.id);
+  });
+  // Synchronisation des champs alias analyste/preco_par
+  fiches.forEach(f => {
+    if (f.preco_par && !f.analyste)       { f.analyste  = f.preco_par; }
+    else if (f.analyste && !f.preco_par)  { f.preco_par = f.analyste;  }
+    else if (!f.analyste && !f.preco_par) { f.analyste  = ''; f.preco_par = ''; }
+    else if (f.analyste !== f.preco_par)  { f.analyste  = f.preco_par; }
+  });
+}
+/* ═══════════════════════════════════════════════════
+   ÉTAT APPLICATIF
+═══════════════════════════════════════════════════ */
+let state = {
+  typology: 'pthr',          // 'pthr' | 'ppe'
+  status: 'a_traiter',       // 'a_traiter' | 'historique'
+  tag: 'all',                // 'all' | 'urgent' | 'prioritaire' | 'sans_operation'
+  histo: 'signee',           // 'signee' | 'rejetee'
+  analysteFilter: 'all',     // 'all' | trigramme analyste (ex: 'AMR')
+  searchQuery: '',           // recherche libre transverse
+  page: 1,                   // page courante (pagination)
+  sortBy: 'date_desc',       // 'date_desc' | 'date_asc' | 'signataire_asc'
+  view: 'home',              // 'home' | 'list' | 'detail'
+  currentFicheId: null
+};
+const PAGE_SIZE = 25;
+/* ═══════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+function fmtDate(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return '—';
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const yy = d.getFullYear();
+  const hh = String(d.getHours()).padStart(2,'0');
+  const mn = String(d.getMinutes()).padStart(2,'0');
+  return `${dd}/${mm}/${yy} ${hh}:${mn}`;
+}
+function fmtDateShort(iso){
+  if(!iso) return '—';
+  const d = new Date(iso);
+  if(isNaN(d.getTime())) return '—';
+  return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+}
+function getFiche(id){
+  return fiches.find(f => f.id === id);
+}
+function escapeHtml(s){
+  if(s==null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function icon(name, size){
+  const s = size || 16;
+  return `<svg class="ico-svg" width="${s}" height="${s}" style="display:inline-block;vertical-align:-0.15em;flex:none" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
+}
+function showToast(msg, type){
+  type = type || 'success';
+  const zone = $('toast-zone');
+  const t = document.createElement('div');
+  t.className = 'toast' + (type==='error' ? ' toast-error' : type==='info' ? ' toast-info' : '');
+  const icon = type==='error' ? '⚠️' : type==='info' ? 'ℹ️' : '✅';
+  t.innerHTML = `<span style="font-size:18px">${icon}</span><span>${escapeHtml(msg)}</span>`;
+  zone.appendChild(t);
+  setTimeout(() => {
+    t.classList.add('fade-out');
+    setTimeout(() => t.remove(), 350);
+  }, 3500);
+}
+let _confirmPrevFocus = null;
+function showConfirm(opts, onConfirm){
+  const o = opts || {};
+  const overlay = document.getElementById('confirm-overlay');
+  const elIcon = document.getElementById('confirm-icon');
+  const elTitle = document.getElementById('confirm-title');
+  const elMsg = document.getElementById('confirm-message');
+  const btnOk = document.getElementById('confirm-ok');
+  const btnCancel = document.getElementById('confirm-cancel');
+  if(!overlay) return;
+  elTitle.textContent = o.title || 'Confirmer';
+  elMsg.textContent = o.message || '';
+  btnOk.textContent = o.okLabel || 'Confirmer';
+  elIcon.innerHTML = o.icon ? `<svg width="40" height="40" aria-hidden="true"><use href="#i-${o.icon}"></use></svg>` : '';
+  btnOk.classList.toggle('danger', !!o.danger);
+  _confirmPrevFocus = document.activeElement;
+  overlay.style.display = 'flex';
+  const newOk = btnOk.cloneNode(true);
+  const newCancel = btnCancel.cloneNode(true);
+  btnOk.parentNode.replaceChild(newOk, btnOk);
+  btnCancel.parentNode.replaceChild(newCancel, btnCancel);
+  const close = () => {
+    overlay.style.display = 'none';
+    if(_confirmPrevFocus && typeof _confirmPrevFocus.focus === 'function') _confirmPrevFocus.focus();
+    _confirmPrevFocus = null;
+  };
+  newCancel.addEventListener('click', close);
+  newOk.addEventListener('click', () => { close(); if(typeof onConfirm === 'function') onConfirm(); });
+  overlay.onclick = (e) => { if(e.target === overlay) close(); };
+  // Accessibilité : place le focus clavier dans la modale à l'ouverture (aucun impact visuel).
+  newOk.focus();
+}
+/* ═══════════════════════════════════════════════════
+   FILTRAGE & TRI
+═══════════════════════════════════════════════════ */
+function getFilteredFiches(){
+  let list = fiches.filter(f => f.typologie === state.typology);
+  if(state.status === 'a_traiter'){
+    list = list.filter(f => f.statut === 'a_traiter');
+    if(state.tag !== 'all'){
+      list = list.filter(f => f.tag === state.tag);
+    }
+  } else {
+    list = list.filter(f => f.statut === state.histo);
+  }
+  // Filtre transverse : analyste
+  if(state.analysteFilter !== 'all'){
+    list = list.filter(f => f.analyste === state.analysteFilter);
+  }
+  // Filtre transverse : recherche libre
+  const q = (state.searchQuery || '').trim();
+  if(q){
+    const norm = s => (s == null ? '' : String(s))
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const nq = norm(q);
+    list = list.filter(f => {
+      const c = f.client || {};
+      let datePart = 'XXXX-XX-XX';
+      if(f.dateReception){
+        const d = new Date(f.dateReception);
+        if(!isNaN(d.getTime())){
+          datePart = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+      }
+      const prefixe = f.typologie === 'pthr' ? 'FICHE PTHR/GAFI-' : 'FICHE PPE/RCA-';
+      const ref = `${prefixe}${datePart}-${(f.analyste||'XXX').toUpperCase()}`;
+      const haystack = norm([
+        c.nom, c.prenom, c.civilite,
+        ref,
+        f.contratNum,
+        f.analyste
+      ].join(' '));
+      return haystack.includes(nq);
+    });
+  }
+  // Tri (date_desc par défaut)
+  switch(state.sortBy){
+    case 'date_asc':
+      list.sort((a,b) => new Date(a.dateReception) - new Date(b.dateReception));
+      break;
+    case 'signataire_asc':
+      list.sort((a,b) => (a.decideur||'').localeCompare(b.decideur||''));
+      break;
+    case 'date_desc':
+    default:
+      list.sort((a,b) => new Date(b.dateReception) - new Date(a.dateReception));
+      break;
+  }
+  return list;
+}
+/* ═══════════════════════════════════════════════════
+   COMPTEURS
+═══════════════════════════════════════════════════ */
+function updateCounters(){
+  // Typologie
+  const pthrAtraiter = fiches.filter(f => f.typologie==='pthr' && f.statut==='a_traiter').length;
+  const ppeAtraiter  = fiches.filter(f => f.typologie==='ppe'  && f.statut==='a_traiter').length;
+  $('typo-count-pthr').textContent = pthrAtraiter;
+  $('typo-count-ppe').textContent  = ppeAtraiter;
+  // Onglets statut (pour la typologie active)
+  const aTraiter   = fiches.filter(f => f.typologie===state.typology && f.statut==='a_traiter').length;
+  const historique = fiches.filter(f => f.typologie===state.typology && (f.statut==='signee' || f.statut==='rejetee')).length;
+  $('badge-a-traiter').textContent = aTraiter;
+  $('badge-historique').textContent = historique;
+  // Tags (À traiter)
+  const baseAt = fiches.filter(f => f.typologie===state.typology && f.statut==='a_traiter');
+  $('cnt-all').textContent            = baseAt.length;
+  $('cnt-urgent').textContent         = baseAt.filter(f => f.tag==='urgent').length;
+  $('cnt-prioritaire').textContent    = baseAt.filter(f => f.tag==='prioritaire').length;
+  $('cnt-sans_operation').textContent = baseAt.filter(f => f.tag==='sans_operation').length;
+  // Mise à jour tooltip onglet À traiter
+  if($('tooltip-urgent')) $('tooltip-urgent').textContent = baseAt.filter(f => f.tag==='urgent').length;
+  if($('tooltip-prio'))   $('tooltip-prio').textContent   = baseAt.filter(f => f.tag==='prioritaire').length;
+  if($('tooltip-sans'))   $('tooltip-sans').textContent   = baseAt.filter(f => f.tag==='sans_operation').length;
+  // Historique
+  const baseHi = fiches.filter(f => f.typologie===state.typology);
+  $('cnt-signee').textContent  = baseHi.filter(f => f.statut==='signee').length;
+  $('cnt-rejetee').textContent = baseHi.filter(f => f.statut==='rejetee').length;
+}
+/* ═══════════════════════════════════════════════════
+   RENDU LISTE
+═══════════════════════════════════════════════════ */
+function renderList(){
+  _ficheRefCache = null;
+  const wrap = $('fiches-list');
+  const list = getFilteredFiches();
+  // Peupler le select Analyste avec les trigrammes uniques (scopés à typologie + statut courant)
+  const analystePool = (state.status === 'a_traiter')
+    ? fiches.filter(f => f.typologie === state.typology && f.statut === 'a_traiter')
+    : fiches.filter(f => f.typologie === state.typology && (f.statut === 'signee' || f.statut === 'rejetee'));
+  const trigrammes = [...new Set(analystePool.map(f => f.analyste).filter(Boolean))].sort();
+  const selA = $('select-analyste');
+  if(selA){
+    selA.innerHTML = '<option value="all">Tous les analystes</option>'
+      + trigrammes.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+    // Auto-reset si l'analyste sélectionné n'existe plus dans le périmètre courant
+    if(state.analysteFilter !== 'all' && !trigrammes.includes(state.analysteFilter)){
+      state.analysteFilter = 'all';
+    }
+    selA.value = state.analysteFilter;
+  }
+  const selS = $('select-sort');
+  if(selS){
+    // Reconstruction dynamique : "Signataire (A-Z)" UNIQUEMENT en mode historique
+    let optionsHtml = '<option value="date_desc">Date (plus récente)</option>'
+                    + '<option value="date_asc">Date (plus ancienne)</option>';
+    if(state.status === 'historique'){
+      optionsHtml += '<option value="signataire_asc">Signataire (A-Z)</option>';
+    } else if(state.sortBy === 'signataire_asc'){
+      // Auto-reset si on quitte l'historique alors que le tri par signataire était sélectionné
+      state.sortBy = 'date_desc';
+    }
+    selS.innerHTML = optionsHtml;
+    selS.value = state.sortBy;
+  }
+  // Barre tri/filtre transverse : visible partout (à traiter ET historique)
+  $('filter-sort-bar').style.display = 'flex';
+  // Affichage des sous-filtres
+  $('filter-tags').style.display  = state.status === 'a_traiter' ? 'flex' : 'none';
+  $('filter-histo').style.display = state.status === 'historique' ? 'flex' : 'none';
+  // Bandeau d'info contextuel
+  if(state.status === 'a_traiter'){
+    $('info-banner').className = 'abox ai';
+    $('info-banner-text').innerHTML = `<strong>Fiches en attente</strong> - ${list.length} fiche${list.length>1?'s':''} à statuer`;
+  } else {
+    $('info-banner').className = 'abox ag';
+    $('info-banner-text').innerHTML = `<strong>Historique</strong> — Consultation des fiches déjà statuées · ${list.length} résultat${list.length>1?'s':''}`;
+  }
+  if(list.length === 0){
+    wrap.innerHTML = `
+      <div class="empty-state">
+        <div class="ico">📭</div>
+        <div class="ttl">Aucune fiche à afficher</div>
+        <div>Modifiez les filtres ou changez de typologie pour voir d'autres fiches.</div>
+      </div>`;
+    return;
+  }
+  // — Pagination —
+  const total = list.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if(state.page > totalPages) state.page = totalPages;
+  if(state.page < 1) state.page = 1;
+  const startIdx = (state.page - 1) * PAGE_SIZE;
+  const endIdx = Math.min(startIdx + PAGE_SIZE, total);
+  const pageItems = list.slice(startIdx, endIdx);
+  let html = pageItems.map(f => renderFicheCard(f)).join('');
+  if(totalPages > 1){
+    let pages = '';
+    for(let p = 1; p <= totalPages; p++){
+      pages += `<button onclick="gotoPage(${p})" class="pg-btn${p === state.page ? ' pg-active' : ''}">${p}</button>`;
+    }
+    html += `
+      <div class="pagination-bar">
+        <button onclick="gotoPage(${state.page - 1})" class="pg-btn pg-nav" ${state.page === 1 ? 'disabled' : ''}>← Précédent</button>
+        <div class="pg-numbers">${pages}</div>
+        <button onclick="gotoPage(${state.page + 1})" class="pg-btn pg-nav" ${state.page === totalPages ? 'disabled' : ''}>Suivant →</button>
+      </div>
+      <div class="pagination-info">Fiches ${total === 0 ? 0 : (startIdx + 1)}–${endIdx} sur ${total}</div>`;
+  }
+  wrap.innerHTML = html;
+  // Resync champ recherche (évite un reset visuel au re-render sans voler le focus)
+  const inpSearch = document.getElementById('input-search');
+  if(inpSearch && inpSearch.value !== state.searchQuery){ inpSearch.value = state.searchQuery; }
+}
+function getPrefixeRef(typologie){
+  return typologie === 'pthr' ? 'FICHE PTHR/GAFI-' : 'FICHE PPE/RCA-';
+}
+// Cache invalidé en tête de renderList()/renderDetail()/exportStatsToCSV() : construit
+// en un seul passage groupé (analyste × année × typologie) la référence de TOUTES les
+// fiches, au lieu de refiltrer + retrier tout le tableau "fiches" pour chaque fiche
+// affichée (l'ancienne implémentation coûtait O(n²·log n) pour une liste complète).
+let _ficheRefCache = null;
+function computeAllFicheReferences() {
+  const map = new Map();
+  const groups = new Map();
+  fiches.forEach(f => {
+    if (!f.dateReception || !f.analyste) return;
+    const d = new Date(f.dateReception);
+    if (isNaN(d.getTime())) return;
+    const key = f.analyste.toUpperCase() + '|' + d.getFullYear() + '|' + f.typologie;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(f);
+  });
+  groups.forEach((list, key) => {
+    // Tri chronologique stable (par date, puis par ID en cas d'égalité) — identique à l'ancienne logique
+    list.sort((a, b) => {
+      const dateDiff = new Date(a.dateReception) - new Date(b.dateReception);
+      if (dateDiff !== 0) return dateDiff;
+      return a.id.localeCompare(b.id);
+    });
+    const [trigramme, , typologie] = key.split('|');
+    const prefixe = typologie === 'pthr' ? 'FICHE PTHR/GAFI' : 'FICHE PPE/RCA';
+    list.forEach((f, idx) => {
+      const d = new Date(f.dateReception);
+      const datePart = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      const sequence = String(idx + 1).padStart(3, '0');
+      map.set(f.id, `${prefixe}-${datePart}-${trigramme}-${sequence}`);
+    });
+  });
+  return map;
+}
+function getFicheReference(fiche) {
+  if (!fiche.dateReception || !fiche.analyste) return 'REF-INCOMPLETE';
+  const d = new Date(fiche.dateReception);
+  if (isNaN(d.getTime())) return 'REF-INVALIDE';
+  if (!_ficheRefCache) _ficheRefCache = computeAllFicheReferences();
+  return _ficheRefCache.get(fiche.id) || 'REF-INCOMPLETE';
+}
+function renderFicheCard(f){
+  const c = f.client || {};
+  const fullName = `${c.civilite || ''} ${c.nom || ''} ${c.prenom || ''}`.trim();
+  const refComplete = getFicheReference(f);
+  const tagClass = f.statut === 'signee' ? 'statut-signee'
+                 : f.statut === 'rejetee' ? 'statut-rejetee'
+                 : `tag-${f.tag}`;
+  const tagLabel = f.statut === 'signee'  ? icon('check-circle',13)+' Signée'
+                 : f.statut === 'rejetee' ? icon('x-circle',13)+' Rejetée'
+                 : (f.tag==='urgent'
+                     ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--error);margin-right:2px"></span>'
+                     : f.tag==='prioritaire'
+                     ? '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warning);margin-right:2px"></span>'
+                     : '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--neutral);margin-right:2px"></span>')
+                   + TAG_LABELS[f.tag];
+  const decisionInfo = f.statut === 'signee'
+      ? `<span class="meta" style="margin-left:14px">${icon('scale',13)} <strong>${escapeHtml(DECISIONS_LABELS[f.decision] || '—')}</strong></span><span style="margin-left:14px; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#047857; background:rgba(16,185,129,.12); border:1px solid rgba(16,185,129,.35); padding:3px 10px; border-radius:6px;">${icon('pen-line',13)} Signé par ${escapeHtml(f.decideur || '—')} le ${fmtDateShort(f.dateDecision)}</span>`
+      : f.statut === 'rejetee'
+      ? `<span class="meta" style="margin-left:14px">${icon('corner-up-left',13)} <strong>Retour analyste</strong></span><span style="margin-left:14px; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#b91c1c; background:rgba(239,68,68,.1); border:1px solid rgba(239,68,68,.3); padding:3px 10px; border-radius:6px;">${icon('pen-line',13)} Signé par ${escapeHtml(f.decideur || '—')} le ${fmtDateShort(f.dateDecision)}</span>`
+      : '';
+  const dateLabel = `Reçue le ${fmtDate(f.dateReception)}`;
+  const opMontant = f.montant && f.montant !== '—' ? `${f.montant} €` : f.typeOperation;
+  return `
+    <div class="fiche-card ${tagClass}" onclick="openDetail('${f.id}')">
+      <div>
+        <span class="fiche-tag">${tagLabel}</span>
+      </div>
+      <div class="fiche-body">
+        <div class="fiche-line1">
+          <span class="typo-badge ${f.typologie}">${f.typologie === 'pthr' ? 'Domiciliations sensibles' : 'PPE / RCA'}</span>
+          <span class="fiche-client">${escapeHtml(fullName)}<span class="fiche-ref" style="font-size:11px; margin-left:8px; vertical-align:middle;">${escapeHtml(refComplete)}</span></span>
+        </div>
+        <div class="fiche-line2">
+          <span class="meta">${icon('calendar',13)} ${escapeHtml(dateLabel)}</span>
+          <span class="meta">${icon('user',13)} Analyste : <strong>${escapeHtml(f.analyste)}</strong></span>
+          <span class="meta">${icon('coins',13)} ${escapeHtml(f.typeOperation)}${f.montant_operation && f.montant_operation !== '—' ? ' · <strong>'+escapeHtml(f.montant_operation)+' €</strong>' : ''}</span>
+        </div>
+        <div class="fiche-line3" style="display:flex; align-items:center; flex-wrap:wrap">
+          ${f.typologie === 'pthr'
+            ? `<span>${icon('globe',13)} Pays sensible : ${escapeHtml(f.paysSensible || '—')}</span>`
+            : `<span>${icon('landmark',13)} ${f.ppe_is_ppe ? 'Fiche PPE' : (f.ppe_is_rca_famille || f.ppe_is_rca_assoc) ? 'Fiche RCA' : escapeHtml(f.profilType || 'Type non défini')} · ${f.ppe_cat ? 'PPE ' + f.ppe_cat : 'Catégorie non définie'}</span>`}
+          ${f.typologie === 'ppe'
+            ? (f.signed_deonto
+                ? `<span style="margin-left:14px; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#1d4ed8; background:rgba(59,130,246,.1); border:1px solid rgba(59,130,246,.3); padding:3px 10px; border-radius:6px;">${icon('shield-check',13)} Signé par la Déontologie le ${fmtDateShort(f.deonto_date_signature)}</span>`
+                : `<span style="margin-left:14px; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; color:#b45309; background:rgba(245,158,11,.12); border:1px solid rgba(245,158,11,.35); padding:3px 10px; border-radius:6px;">${icon('clock',13)} En attente Déontologie</span>`)
+            : ''}
+          ${decisionInfo}
+        </div>
+      </div>
+      <div class="fiche-arrow">→</div>
+    </div>`;
+}
+/* ═══════════════════════════════════════════════════
+   RENDU DÉTAIL
+═══════════════════════════════════════════════════ */
+window.generateFactivaInputs = function() {
+  const container = document.getElementById('factiva_inputs_container');
+  const nbInput = document.getElementById('d_doc_factiva_nb');
+  if(!container || !nbInput) return;
+  const count = parseInt(nbInput.value) || 0;
+  // Persiste les valeurs DOM actuelles dans la fiche avant de reconstruire
+  const f = getFiche(state.currentFicheId);
+  if(f) {
+    f.doc_factiva_nums = Array.from(container.querySelectorAll('.factiva-num-input')).map(i => i.value);
+  }
+  const savedNums = (f && f.doc_factiva_nums) || [];
+  container.innerHTML = '';
+  for(let i = 0; i < count; i++) {
+    const v = savedNums[i] || '';
+    container.innerHTML += `<div class="field"><label>Numéro fiche ${i+1}</label><input type="text" class="factiva-num-input" value="${escapeHtml(v)}" ${nbInput.hasAttribute('readonly') ? 'readonly' : ''}></div>`;
+  }
+};
+function toggleDynamicFields(){
+  const toggle = (chkId, wrapId) => {
+    const chk = document.getElementById(chkId); const wrap = document.getElementById(wrapId);
+    if(chk && wrap) wrap.style.display = chk.checked ? 'block' : 'none';
+  };
+  const toggleSelect = (selId, wrapId, valToMatch) => {
+    const sel = document.getElementById(selId); const wrap = document.getElementById(wrapId);
+    if(sel && wrap) wrap.style.display = (sel.value === valToMatch) ? 'block' : 'none';
+  };
+  // PTHR
+  toggle('d_kyc_dom', 'd_kyc_dom_date');
+  toggle('d_kyc_impot', 'd_kyc_impot_date');
+  toggle('d_kyc_auto', 'd_kyc_auto_date');
+  toggle('d_kyc_paie', 'd_kyc_paie_date');
+  toggle('d_kyc_diag', 'd_kyc_diag_date');
+  toggle('d_kyc_attest', 'd_kyc_attest_date');
+  toggle('d_kyc_frc', 'd_kyc_frc_date');
+  toggle('d_kyc_frcons', 'd_kyc_frcons_date');
+  toggle('d_lien_autre', 'd_lien_autre_text');
+  toggle('d_connu_autre', 'd_connu_autre_text');
+  toggle('d_doc_factiva', 'wrap_factiva');
+  toggle('d_doc_id', 'wrap_id');
+  toggle('d_doc_kyc', 'wrap_kyc');
+  toggle('d_doc_assu', 'd_doc_assu_text');
+  toggle('d_doc_autre', 'd_doc_autre_text');
+  toggleSelect('d_origineDetection', 'd_origineDetection_autre', 'Autre');
+  toggleSelect('d_doc_id_type', 'd_doc_id_type_autre', 'Autre');
+  // PPE
+  toggleSelect('d_origineDetection', 'd_ppe_origineDetection_autre', 'Autre');
+  const deontoSel = document.getElementById('d_deonto_detection');
+  const deontoWrap = document.getElementById('wrap_deonto_avis');
+  if(deontoSel && deontoWrap) deontoWrap.style.display = deontoSel.value ? 'flex' : 'none';
+  const rcaFam = document.getElementById('d_ppe_is_rca_famille');
+  const rcaAssoc = document.getElementById('d_ppe_is_rca_assoc');
+  const wrapDetails = document.getElementById('wrap_ppe_details');
+  if(rcaFam && rcaAssoc && wrapDetails) {
+    wrapDetails.style.display = (rcaFam.checked || rcaAssoc.checked) ? 'flex' : 'none';
+  }
+}
+/* ═══════════════════════════════════════════════════
+   HELPERS UI — Blocs préconisation & documents
+═══════════════════════════════════════════════════ */
+function getPrecoBlockHtml(f, isAtraiter, ro, pNumber) {
+  return `
+  <div class="card">
+    <div class="card-title">${pNumber}. Préconisation de l'analyste</div>
+    <div class="g3">
+      <div class="field span3"><label>Préconisation</label>
+        <select id="d_preco_analyste" ${isAtraiter ? '' : 'disabled'}>
+          <option value="">-- Sélectionner --</option>
+          <option value="entree_accord_sans" ${f.preco_analyste==='entree_accord_sans'?'selected':''}>Accord pour l'entrée en relation sans mise sous surveillance</option>
+          <option value="entree_accord_avec" ${f.preco_analyste==='entree_accord_avec'?'selected':''}>Accord pour l'entrée en relation avec mise sous surveillance</option>
+          <option value="entree_refus" ${f.preco_analyste==='entree_refus'?'selected':''}>Refus de l'entrée en relation</option>
+          <option value="poursuite_sans" ${f.preco_analyste==='poursuite_sans'?'selected':''}>Poursuite de la relation sans mise sous surveillance</option>
+          <option value="poursuite_avec" ${f.preco_analyste==='poursuite_avec'?'selected':''}>Poursuite de la relation avec mise sous surveillance</option>
+          <option value="rupture" ${f.preco_analyste==='rupture'?'selected':''}>Rupture de la relation d'affaires</option>
+        </select>
+      </div>
+      <div class="field"><label>Dossier préparé le</label><input type="date" id="d_preco_date" value="${escapeHtml(f.preco_date||'')}" ${ro}></div>
+      <div class="field span2"><label>PAR SF : TRIGRAMME</label><input type="text" id="d_preco_par" value="${escapeHtml(f.preco_par||'')}" ${ro}></div>
+    </div>
+  </div>`;
+}
+function getDocsBlockHtml(f, isAtraiter, ro, pNumber) {
+  return `
+  <div class="card">
+    <div class="card-title">${pNumber}. Liste des documents examinés</div>
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <div>
+        <label style="font-weight:600"><input type="checkbox" id="d_doc_factiva" onchange="toggleDynamicFields()" ${f.doc_factiva?'checked':''} ${isAtraiter ? '' : 'disabled'}> Extrait du référentiel FACTIVA</label>
+        <div id="wrap_factiva" style="display:none; margin:8px 0 0 24px; padding:12px; background:var(--surface-hover); border-left:3px solid var(--accent); border-radius:4px">
+          <div class="field"><label>Nombre de fiche(s)</label><input type="number" id="d_doc_factiva_nb" value="${escapeHtml(f.doc_factiva_nb||'')}" oninput="generateFactivaInputs()" min="1" ${ro}></div>
+          <div id="factiva_inputs_container" style="display:flex; flex-direction:column; gap:8px; margin-top:10px;"></div>
+        </div>
+      </div>
+      <div>
+        <label style="font-weight:600"><input type="checkbox" id="d_doc_id" onchange="toggleDynamicFields()" ${f.doc_id?'checked':''} ${isAtraiter ? '' : 'disabled'}> Pièces d'identité</label>
+        <div id="wrap_id" style="display:none; margin:8px 0 0 24px; padding:12px; background:var(--surface-hover); border-left:3px solid var(--accent); border-radius:4px">
+          <div class="g3">
+            <div class="field"><label>Type de pièce</label>
+              <select id="d_doc_id_type" onchange="toggleDynamicFields()" ${isAtraiter ? '' : 'disabled'}>
+                <option value="">-- Sélectionner --</option>
+                <option value="CNI" ${f.doc_id_type==='CNI'?'selected':''}>CNI</option>
+                <option value="Passeport" ${f.doc_id_type==='Passeport'?'selected':''}>Passeport</option>
+                <option value="Autre" ${f.doc_id_type==='Autre'?'selected':''}>Autre (à préciser)</option>
+              </select>
+              <input type="text" id="d_doc_id_type_autre" value="${escapeHtml(f.doc_id_type_autre||'')}" style="display:none; margin-top:6px;" placeholder="Préciser la pièce d'identité..." ${ro}>
+            </div>
+            <div class="field"><label>Numéro de la pièce</label><input type="text" id="d_doc_id_num" value="${escapeHtml(f.doc_id_num||'')}" ${ro}></div>
+            <div class="field"><label>Date de validité</label><input type="date" id="d_doc_id_date" value="${escapeHtml(f.doc_id_date||'')}" ${ro}></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <label style="font-weight:600"><input type="checkbox" id="d_doc_kyc" onchange="toggleDynamicFields()" ${f.doc_kyc?'checked':''} ${isAtraiter ? '' : 'disabled'}> Eléments de connaissance client (revenus / patrimoine / lieu de résidence)</label>
+        <div id="wrap_kyc" style="display:none; margin:8px 0 0 24px; padding:12px; background:var(--surface-hover); border-left:3px solid var(--accent); border-radius:4px">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_dom" onchange="toggleDynamicFields()" ${f.kyc_dom?'checked':''} ${isAtraiter ? '' : 'disabled'}> Justificatif de domicile</label><input type="date" id="d_kyc_dom_date" value="${escapeHtml(f.kyc_dom_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_impot" onchange="toggleDynamicFields()" ${f.kyc_impot?'checked':''} ${isAtraiter ? '' : 'disabled'}> Avis d'imposition</label><input type="date" id="d_kyc_impot_date" value="${escapeHtml(f.kyc_impot_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_auto" onchange="toggleDynamicFields()" ${f.kyc_auto?'checked':''} ${isAtraiter ? '' : 'disabled'}> Auto-certification</label><input type="date" id="d_kyc_auto_date" value="${escapeHtml(f.kyc_auto_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_paie" onchange="toggleDynamicFields()" ${f.kyc_paie?'checked':''} ${isAtraiter ? '' : 'disabled'}> Bulletin de paie</label><input type="date" id="d_kyc_paie_date" value="${escapeHtml(f.kyc_paie_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_diag" onchange="toggleDynamicFields()" ${f.kyc_diag?'checked':''} ${isAtraiter ? '' : 'disabled'}> Diagnostic financier</label><input type="date" id="d_kyc_diag_date" value="${escapeHtml(f.kyc_diag_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_attest" onchange="toggleDynamicFields()" ${f.kyc_attest?'checked':''} ${isAtraiter ? '' : 'disabled'}> Attestation d'activité</label><input type="date" id="d_kyc_attest_date" value="${escapeHtml(f.kyc_attest_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_frc" onchange="toggleDynamicFields()" ${f.kyc_frc?'checked':''} ${isAtraiter ? '' : 'disabled'}> Fiche renseignement client</label><input type="date" id="d_kyc_frc_date" value="${escapeHtml(f.kyc_frc_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+            <div style="display:flex;align-items:center;gap:6px"><label><input type="checkbox" id="d_kyc_frcons" onchange="toggleDynamicFields()" ${f.kyc_frcons?'checked':''} ${isAtraiter ? '' : 'disabled'}> Fiche renseignement cons.</label><input type="date" id="d_kyc_frcons_date" value="${escapeHtml(f.kyc_frcons_date||'')}" style="display:none; padding:2px; height:24px" ${ro}></div>
+          </div>
+        </div>
+      </div>
+      <label><input type="checkbox" id="d_doc_ptf_cli" ${f.doc_ptf_cli?'checked':''} ${isAtraiter ? '' : 'disabled'}> Portefeuille et historique des opérations si client déjà connu</label>
+      <label><input type="checkbox" id="d_doc_ptf_ben" ${f.doc_ptf_ben?'checked':''} ${isAtraiter ? '' : 'disabled'}> Portefeuille et historique des opérations si bénéficiaire(s) déjà connu(s)</label>
+      <div>
+        <label style="font-weight:600"><input type="checkbox" id="d_doc_assu" onchange="toggleDynamicFields()" ${f.doc_assu?'checked':''} ${isAtraiter ? '' : 'disabled'}> Document d'assurances (souscription, demande d'opération financière)</label>
+        <input type="text" id="d_doc_assu_text" value="${escapeHtml(f.doc_assu_text||'')}" ${ro} style="display:none; margin:8px 0 0 24px; width:calc(100% - 24px)" placeholder="Préciser...">
+      </div>
+      <label><input type="checkbox" id="d_doc_justif" ${f.doc_justif?'checked':''} ${isAtraiter ? '' : 'disabled'}> Document justifiant l'origine ou la destination des fonds</label>
+      <label><input type="checkbox" id="d_doc_releve" ${f.doc_releve?'checked':''} ${isAtraiter ? '' : 'disabled'}> Relevé bancaire du compte permettant de tracer les fonds</label>
+      <label><input type="checkbox" id="d_doc_media" ${f.doc_media?'checked':''} ${isAtraiter ? '' : 'disabled'}> Recherche média de la PP, PM et de la Banque étrangère</label>
+      <div>
+        <label style="font-weight:600"><input type="checkbox" id="d_doc_autre" onchange="toggleDynamicFields()" ${f.doc_autre?'checked':''} ${isAtraiter ? '' : 'disabled'}> Autres éléments apportés au dossier</label>
+        <input type="text" id="d_doc_autre_text" value="${escapeHtml(f.doc_autre_text||'')}" ${ro} style="display:none; margin:8px 0 0 24px; width:calc(100% - 24px)" placeholder="Préciser...">
+      </div>
+    </div>
+  </div>`;
+}
+function renderDetail(){
+  _ficheRefCache = null;
+  const f = getFiche(state.currentFicheId);
+  if(!f){ goBack(); return; }
+  const c = f.client || {};
+  const fullName = `${c.civilite || ''} ${c.nom || ''} ${c.prenom || ''}`.trim();
+  const isAtraiter = f.statut === 'a_traiter';
+  const isPthr = f.typologie === 'pthr';
+  const refComplete = getFicheReference(f);
+  const tagClass = f.statut === 'signee' ? 'statut-signee'
+                 : f.statut === 'rejetee' ? 'statut-rejetee'
+                 : `tag-${f.tag}`;
+  const tagLabel = f.statut === 'signee'  ? '✅ Signée'
+                 : f.statut === 'rejetee' ? '❌ Rejetée'
+                 : (f.tag==='urgent' ? '🔴 ' : f.tag==='prioritaire' ? '🟡 ' : '⚪ ') + TAG_LABELS[f.tag];
+  /* — Bloc identité (champs modifiables si à traiter) — */
+  const ro = isAtraiter ? '' : 'readonly';
+  /* — Séparation stricte de l'affichage selon la typologie — */
+  let blockIdentite = '';
+  let blockOperation = '';
+  let blockPrecoDocs = '';
+  let blockDeonto = '';
+  if(isPthr) {
+    blockIdentite = `
+    <div class="card">
+      <div class="card-title">1. Périmètre d'application (Entités)</div>
+      <div class="g3">
+        <div class="field"><label>CNP Assurances SA</label><select id="d_cnp_sa" ${isAtraiter ? '' : 'disabled'}><option value="NON" ${f.cnp_sa==='NON'?'selected':''}>NON</option><option value="OUI" ${f.cnp_sa==='OUI'?'selected':''}>OUI</option></select></div>
+        <div class="field"><label>CNP Retraite</label><select id="d_cnp_ret" ${isAtraiter ? '' : 'disabled'}><option value="NON" ${f.cnp_ret==='NON'?'selected':''}>NON</option><option value="OUI" ${f.cnp_ret==='OUI'?'selected':''}>OUI</option></select></div>
+        <div class="field"><label>CNP Ass. Prévoyance</label><select id="d_cnp_prev" ${isAtraiter ? '' : 'disabled'}><option value="NON" ${f.cnp_prev==='NON'?'selected':''}>NON</option><option value="OUI" ${f.cnp_prev==='OUI'?'selected':''}>OUI</option></select></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">2. Personne concernée en lien avec pays/territoire répertorié listes PTHR et/ou GAFI :</div>
+      <div class="g3">
+        <div class="field"><label>Civilité</label>
+          <select id="d_civ" ${isAtraiter ? '' : 'disabled'}><option value="M." ${c.civilite==='M.'?'selected':''}>M.</option><option value="Mme" ${c.civilite==='Mme'?'selected':''}>Mme</option></select>
+        </div>
+        <div class="field"><label>Nom patronymique</label><input type="text" id="d_nom" value="${escapeHtml(c.nom||'')}" ${ro}></div>
+        <div class="field"><label>Nom marital (le cas échéant)</label><input type="text" id="d_nom_marital" value="${escapeHtml(c.nomMarital||'')}" ${ro}></div>
+        <div class="field"><label>Prénom</label><input type="text" id="d_prenom" value="${escapeHtml(c.prenom||'')}" ${ro}></div>
+        <div class="field"><label>Date de naissance</label><input type="date" id="d_ddn" value="${escapeHtml(c.ddn||'')}" ${ro}></div>
+        <div class="field"><label>Pays de résidence postale</label><input type="text" id="d_pays_residence" value="${escapeHtml(c.paysResidence||'')}" ${ro}></div>
+        <div class="field"><label>ID RIC</label><input type="text" id="d_ric" value="${escapeHtml(c.ric||'')}" ${ro}></div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <div style="height:42px; display:flex; align-items:center;">
+            <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; color:var(--text-primary); text-transform:none; letter-spacing:normal;">
+              <input type="checkbox" id="d_is_ppe" ${f.is_ppe?'checked':''} ${isAtraiter ? '' : 'disabled'}> <strong>PPE/RCA</strong>
+            </label>
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>`;
+    blockOperation = `
+    <div class="card">
+      <div class="card-title">3. Lien de la personne avec le pays / territoire ainsi que la nature de la relation</div>
+      <div class="g3">
+        <div class="field span3"><label>Pays/territoire identifié</label><input type="text" id="d_pays" value="${escapeHtml(f.paysSensible||'')}" ${ro}></div>
+        <div class="field span3"><label>Appartenance liste</label>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; padding:2px 0;">
+            <label><input type="checkbox" id="d_chk_pthr" ${f.chk_pthr?'checked':''} ${isAtraiter ? '' : 'disabled'}> Liste PTHR</label>
+            <label><input type="checkbox" id="d_chk_gafi1" ${f.chk_gafi1?'checked':''} ${isAtraiter ? '' : 'disabled'}> Liste GAFI 1</label>
+            <label><input type="checkbox" id="d_chk_gafi2" ${f.chk_gafi2?'checked':''} ${isAtraiter ? '' : 'disabled'}> Liste GAFI 2</label>
+          </div>
+        </div>
+        <div class="field span3"><label>Nature du lien</label>
+          <div style="display:flex; flex-direction:column; gap:6px; padding:2px 0;">
+            <label><input type="checkbox" id="d_lien_postale" ${f.lien_postale?'checked':''} ${isAtraiter ? '' : 'disabled'}> Domiciliation postale</label>
+            <label><input type="checkbox" id="d_lien_fiscale" ${f.lien_fiscale?'checked':''} ${isAtraiter ? '' : 'disabled'}> Domiciliation fiscale</label>
+            <label><input type="checkbox" id="d_lien_bancaire" ${f.lien_bancaire?'checked':''} ${isAtraiter ? '' : 'disabled'}> Domiciliation bancaire</label>
+            <label><input type="checkbox" id="d_lien_autre" onchange="toggleDynamicFields()" ${f.lien_autre?'checked':''} ${isAtraiter ? '' : 'disabled'}> Autres (à préciser obligatoirement)</label>
+            <input type="text" id="d_lien_autre_text" value="${escapeHtml(f.lien_autre_text||'')}" ${ro} style="display:none; margin-left:24px; width:calc(100% - 24px)" placeholder="Précisez la nature du lien...">
+          </div>
+        </div>
+        <div class="field span3"><label>Déjà connue de CNP Assurances en tant que</label>
+          <div style="display:flex; flex-direction:column; gap:6px; padding:2px 0;">
+            <label><input type="checkbox" id="d_connu_cliente" ${f.connu_cliente?'checked':''} ${isAtraiter ? '' : 'disabled'}> Cliente</label>
+            <label><input type="checkbox" id="d_connu_benef_nom" ${f.connu_benef_nom?'checked':''} ${isAtraiter ? '' : 'disabled'}> Bénéficiaire nominative d'un contrat</label>
+            <label><input type="checkbox" id="d_connu_benef_eff_pm" ${f.connu_benef_eff_pm?'checked':''} ${isAtraiter ? '' : 'disabled'}> Bénéficiaire effectif d'un client personne morale</label>
+            <label><input type="checkbox" id="d_connu_benef_clause" ${f.connu_benef_clause?'checked':''} ${isAtraiter ? '' : 'disabled'}> Bénéficiaire d'une clause type d'un contrat</label>
+            <label><input type="checkbox" id="d_connu_benef_eff_desig" ${f.connu_benef_eff_desig?'checked':''} ${isAtraiter ? '' : 'disabled'}> Bénéficiaire effectif d'une personne morale désignée bénéficiaire d'un contrat</label>
+            <label><input type="checkbox" id="d_connu_autre" onchange="toggleDynamicFields()" ${f.connu_autre?'checked':''} ${isAtraiter ? '' : 'disabled'}> Autres (à préciser obligatoirement) :</label>
+            <input type="text" id="d_connu_autre_text" value="${escapeHtml(f.connu_autre_text||'')}" ${ro} style="display:none; margin-left:24px; width:calc(100% - 24px)" placeholder="Précisez...">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">4. Objet de l'avis & Détection</div>
+      <div class="g3">
+        <div class="field"><label>Cet avis concerne</label>
+          <select id="d_concerne" ${isAtraiter ? '' : 'disabled'}>
+            <option value="">-- Sélectionner --</option>
+            <option value="Nouvelle entrée en relation d'affaires" ${f.concerne==='Nouvelle entrée en relation d\'affaires'?'selected':''}>Nouvelle entrée en relation d'affaires</option>
+            <option value="La poursuite de la relation d'affaires" ${f.concerne==='La poursuite de la relation d\'affaires'?'selected':''}>La poursuite de la relation d'affaires</option>
+          </select>
+        </div>
+        <div class="field span2"><label>Préciser l'opération (Ex: VI, VR, VL / RT, RP...)</label><input type="text" id="d_typeOp" value="${escapeHtml(f.typeOperation||'')}" ${ro}></div>
+        <div class="field"><label>Détection</label>
+          <select id="d_origineDetection" onchange="toggleDynamicFields()" ${isAtraiter ? '' : 'disabled'}>
+            <option value="">-- Sélectionner --</option>
+            <option value="Alerte PTF" ${f.origineDetection==='Alerte PTF'?'selected':''}>Alerte PTF</option>
+            <option value="Auto-déclaration" ${f.origineDetection==='Auto-déclaration'?'selected':''}>Auto-déclaration</option>
+            <option value="Autre" ${f.origineDetection==='Autre'?'selected':''}>Autre (Préciser)</option>
+          </select>
+          <input type="text" id="d_origineDetection_autre" value="${escapeHtml(f.origineDetection_autre||'')}" style="display:none; margin-top:6px;" placeholder="Préciser..." ${ro}>
+        </div>
+        <div class="field"><label>Date de détection</label><input type="date" id="d_dateDetection" value="${escapeHtml(f.dateDetection||'')}" ${ro}></div>
+        <div class="field"><label>Épargne CNP Assurances SA (€)</label><input type="text" id="d_montant" value="${escapeHtml(f.montant||'')}" ${ro}></div>
+        <div class="field"><label>Montant total de(s) l'opération(s) en cours</label><input type="text" id="d_montant_operation" value="${escapeHtml(f.montant_operation||'')}" ${ro}></div>
+      </div>
+    </div>`;
+    blockPrecoDocs = getPrecoBlockHtml(f, isAtraiter, ro, 6) + getDocsBlockHtml(f, isAtraiter, ro, 7);
+  } else {
+    // BLOC PPE RESTRUCTURÉ (1 à 8)
+    blockIdentite = `
+    <div class="card">
+      <div class="card-title">1. Périmètre d'application (Entités)</div>
+      <div class="g3">
+        <div class="field"><label>CNP Assurances SA</label><select id="d_cnp_sa" ${isAtraiter ? '' : 'disabled'}><option value="NON" ${f.cnp_sa==='NON'?'selected':''}>NON</option><option value="OUI" ${f.cnp_sa==='OUI'?'selected':''}>OUI</option></select></div>
+        <div class="field"><label>CNP Retraite</label><select id="d_cnp_ret" ${isAtraiter ? '' : 'disabled'}><option value="NON" ${f.cnp_ret==='NON'?'selected':''}>NON</option><option value="OUI" ${f.cnp_ret==='OUI'?'selected':''}>OUI</option></select></div>
+        <div class="field"><label>CNP Ass. Prévoyance</label><select id="d_cnp_prev" ${isAtraiter ? '' : 'disabled'}><option value="NON" ${f.cnp_prev==='NON'?'selected':''}>NON</option><option value="OUI" ${f.cnp_prev==='OUI'?'selected':''}>OUI</option></select></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">2. Personne Politiquement Exposée concernée :</div>
+      <div class="g3">
+        <div class="field"><label>Civilité</label>
+          <select id="d_civ" ${isAtraiter ? '' : 'disabled'}><option value="M." ${c.civilite==='M.'?'selected':''}>M.</option><option value="Mme" ${c.civilite==='Mme'?'selected':''}>Mme</option></select>
+        </div>
+        <div class="field"><label>Nom patronymique</label><input type="text" id="d_nom" value="${escapeHtml(c.nom||'')}" ${ro}></div>
+        <div class="field"><label>Nom marital (le cas échéant)</label><input type="text" id="d_nom_marital" value="${escapeHtml(c.nomMarital||'')}" ${ro}></div>
+        <div class="field"><label>Prénom</label><input type="text" id="d_prenom" value="${escapeHtml(c.prenom||'')}" ${ro}></div>
+        <div class="field"><label>Date de naissance</label><input type="date" id="d_ddn" value="${escapeHtml(c.ddn||'')}" ${ro}></div>
+        <div class="field"><label>Pays de résidence postale</label><input type="text" id="d_pays_residence" value="${escapeHtml(c.paysResidence||'')}" ${ro}></div>
+        <div class="field"><label>ID RIC</label><input type="text" id="d_ric" value="${escapeHtml(c.ric||'')}" ${ro}></div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <div style="height:42px; display:flex; align-items:center;">
+            <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; color:var(--text-primary); text-transform:none; letter-spacing:normal;">
+              <input type="checkbox" id="d_ppe_lien_pays_sf" ${f.ppe_lien_pays_sf?'checked':''} ${isAtraiter ? '' : 'disabled'}> <strong>Lien avec Pays sous avis filière SF</strong>
+            </label>
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>`;
+    blockOperation = `
+    <div class="card">
+      <div class="card-title">3. La personne identifiée est :</div>
+      <div class="g2">
+        <div class="field">
+          <div style="display:flex; flex-direction:column; gap:6px; padding:4px 0;">
+            <label><input type="checkbox" id="d_ppe_is_ppe" ${f.ppe_is_ppe?'checked':''} ${isAtraiter ? '' : 'disabled'}> Une Personne Politiquement Exposée</label>
+            <label><input type="checkbox" id="d_ppe_is_rca_famille" onchange="toggleDynamicFields()" ${f.ppe_is_rca_famille?'checked':''} ${isAtraiter ? '' : 'disabled'}> Un membre direct de la famille d'une PPE (RCA)</label>
+            <label><input type="checkbox" id="d_ppe_is_rca_assoc" onchange="toggleDynamicFields()" ${f.ppe_is_rca_assoc?'checked':''} ${isAtraiter ? '' : 'disabled'}> Une personne connue pour être associée d'une PPE</label>
+          </div>
+          <div id="wrap_ppe_details" style="display:none; margin:8px 0 0 24px; padding:12px; background:var(--surface-hover); border-left:3px solid var(--accent); border-radius:4px; flex-direction:column; gap:8px;">
+            <div class="field"><label>NOM / Prénom de la PPE :</label><input type="text" id="d_ppe_nom_ppe" value="${escapeHtml(f.ppe_nom_ppe||'')}" ${ro}></div>
+            <div class="field"><label>Lien avec la PPE :</label><input type="text" id="d_ppe_lien_ppe" value="${escapeHtml(f.ppe_lien_ppe||'')}" ${ro}></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Déjà connue de CNP Assurances en tant que :</label>
+          <div style="display:flex; flex-direction:column; gap:6px; padding:4px 0; margin-left:16px;">
+            <label><input type="checkbox" id="d_ppe_connu_cliente" ${f.ppe_connu_cliente?'checked':''} ${isAtraiter ? '' : 'disabled'}> Cliente</label>
+            <label><input type="checkbox" id="d_ppe_connu_benef_nom" ${f.ppe_connu_benef_nom?'checked':''} ${isAtraiter ? '' : 'disabled'}> Bénéficiaire nominative d'un contrat</label>
+            <label><input type="checkbox" id="d_ppe_connu_benef_eff_pm" ${f.ppe_connu_benef_eff_pm?'checked':''} ${isAtraiter ? '' : 'disabled'}> Bénéficiaire effectif d'un client personne morale.</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">4. Catégorie PPE (règle groupe LBP) :</div>
+      <div class="field">
+        <div style="display:flex; gap:24px; padding:4px 0;">
+          <label><input type="radio" name="ppe_cat" value="3" ${f.ppe_cat==='3'?'checked':''} ${isAtraiter ? '' : 'disabled'}> 3</label>
+          <label><input type="radio" name="ppe_cat" value="2" ${f.ppe_cat==='2'?'checked':''} ${isAtraiter ? '' : 'disabled'}> 2</label>
+          <label><input type="radio" name="ppe_cat" value="1" ${f.ppe_cat==='1'?'checked':''} ${isAtraiter ? '' : 'disabled'}> 1</label>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">5. Objet de l'avis & Détection</div>
+      <div class="g3">
+        <div class="field"><label>Cet avis concerne</label>
+          <select id="d_ppe_concerne" ${isAtraiter ? '' : 'disabled'}>
+            <option value="">-- Sélectionner --</option>
+            <option value="Nouvelle entrée en relation d'affaires" ${f.ppe_concerne==='Nouvelle entrée en relation d\'affaires'?'selected':''}>Nouvelle entrée en relation d'affaires</option>
+            <option value="La poursuite de la relation d'affaires" ${f.ppe_concerne==='La poursuite de la relation d\'affaires'?'selected':''}>La poursuite de la relation d'affaires</option>
+          </select>
+        </div>
+        <div class="field span2"><label>Préciser l'opération (Ex: VI, VR, VL / RT...)</label><input type="text" id="d_typeOp" value="${escapeHtml(f.typeOperation||'')}" ${ro}></div>
+        <div class="field"><label>Détection</label>
+          <select id="d_origineDetection" onchange="toggleDynamicFields()" ${isAtraiter ? '' : 'disabled'}>
+            <option value="">-- Sélectionner --</option>
+            <option value="Alerte PTF" ${f.origineDetection==='Alerte PTF'?'selected':''}>Alerte PTF</option>
+            <option value="Auto-déclaration" ${f.origineDetection==='Auto-déclaration'?'selected':''}>Auto-déclaration</option>
+            <option value="Autre" ${f.origineDetection==='Autre'?'selected':''}>Autre (Préciser)</option>
+          </select>
+          <input type="text" id="d_ppe_origineDetection_autre" value="${escapeHtml(f.ppe_origineDetection_autre||'')}" style="display:none; margin-top:6px" placeholder="Préciser..." ${ro}>
+        </div>
+        <div class="field"><label>Date de détection</label><input type="date" id="d_dateDetection" value="${escapeHtml(f.dateDetection||'')}" ${ro}></div>
+        <div class="field"><label>Épargne CNP Assurances SA (€)</label><input type="text" id="d_montant" value="${escapeHtml(f.montant||'')}" ${ro}></div>
+        <div class="field"><label>Montant total de(s) l'opération(s) en cours</label><input type="text" id="d_montant_operation" value="${escapeHtml(f.montant_operation||'')}" ${ro}></div>
+      </div>
+    </div>`;
+    blockPrecoDocs = getPrecoBlockHtml(f, isAtraiter, ro, 7) + getDocsBlockHtml(f, isAtraiter, ro, 8);
+    // Bloc Déontologie (PPE uniquement)
+    if(f.signed_deonto) {
+      blockDeonto = `
+      <div class="decision-card" style="border-top:4px solid #3b82f6;">
+        <div class="decision-title" style="color:#3b82f6;">${icon('shield-check',15)} Préconisation Pôle Déontologie &amp; Éthique — Signée</div>
+        <div style="font-size:14px; color:var(--text-secondary); margin-top:6px;">
+          Signé par <strong>${escapeHtml(f.deonto_trigramme||'—')}</strong> le ${fmtDate(f.deonto_date_signature)}
+        </div>
+        ${f.deonto_avis ? `<div style="margin-top:8px; font-weight:600; color:var(--text-primary);">Avis : ${escapeHtml(DEONTO_AVIS_LABELS[f.deonto_avis] || f.deonto_avis)}</div>` : ''}
+        ${f.deonto_explications ? `<div style="margin-top:6px; font-size:13px; color:var(--text-secondary); white-space:pre-wrap;">${escapeHtml(f.deonto_explications)}</div>` : ''}
+      </div>`;
+    } else if(isAtraiter) {
+      const _dNow = new Date();
+      const _dToday = `${String(_dNow.getDate()).padStart(2,'0')}/${String(_dNow.getMonth()+1).padStart(2,'0')}/${_dNow.getFullYear()}`;
+      blockDeonto = `
+      <div class="decision-card" style="border-top:4px solid #3b82f6;">
+        <div class="decision-title" style="color:#3b82f6;">${icon('shield-check',15)} Préconisation Pôle Déontologie &amp; Éthique</div>
+        <div class="g2" style="margin:14px 0;">
+          <div class="field">
+            <label>Trigramme</label>
+            <input type="text" id="d_deonto_trigramme" value="${escapeHtml(f.deonto_trigramme||'')}" placeholder="Ex: ABC" maxlength="3" style="text-transform:uppercase">
+          </div>
+          <div class="field">
+            <label>Date de signature</label>
+            <input type="text" id="d_deonto_date" readonly value="${f.deonto_date_signature ? fmtDateShort(f.deonto_date_signature) : _dToday}">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>Détection de la PPE</label>
+          <select id="d_deonto_detection" onchange="toggleDynamicFields()">
+            <option value="">-- Sélectionner --</option>
+            <option value="Entrée en relation" ${f.deonto_detection==='Entrée en relation'?'selected':''}>Lors de l'entrée en relation d'affaire</option>
+            <option value="Au cours de la relation" ${f.deonto_detection==='Au cours de la relation'?'selected':''}>Au cours de la relation d'affaire</option>
+          </select>
+        </div>
+        <div id="wrap_deonto_avis" style="display:none; flex-direction:column; gap:10px; margin-top:15px; padding-left:10px; border-left:2px solid #3b82f6;">
+          <label style="display:flex; align-items:center; gap:8px; text-transform:none; letter-spacing:normal; font-weight:500;"><input type="radio" name="deonto_avis" value="favorable" ${f.deonto_avis==='favorable'?'checked':''}> Avis favorable pour la poursuite de la relation</label>
+          <label style="display:flex; align-items:center; gap:8px; text-transform:none; letter-spacing:normal; font-weight:500;"><input type="radio" name="deonto_avis" value="favorable_1an" ${f.deonto_avis==='favorable_1an'?'checked':''}> Avis favorable pour la poursuite de la relation avec réévaluation à 1 an</label>
+          <label style="display:flex; align-items:center; gap:8px; text-transform:none; letter-spacing:normal; font-weight:500;"><input type="radio" name="deonto_avis" value="defavorable" ${f.deonto_avis==='defavorable'?'checked':''}> Avis défavorable pour la poursuite de la relation</label>
+          <div class="field" style="margin-top:6px;">
+            <label>Éléments explicatifs</label>
+            <textarea id="d_deonto_explications" style="min-height:80px">${escapeHtml(f.deonto_explications||'')}</textarea>
+          </div>
+        </div>
+        <div style="margin-top:14px;">
+          <button class="btn-sign" style="background:#3b82f6;" onclick="signDeonto('${f.id}')">${icon('pen-line',14)} Signer l'avis Déontologie</button>
+        </div>
+      </div>`;
+    }
+  }
+  /* — Bloc avis analyste — */
+  const titleAvis = isPthr ? "5. Avis & analyse de l'analyste" : "6. Avis & analyse de l'analyste";
+  const blockAvis = `
+    <div class="card">
+      <div class="card-title">${titleAvis}</div>
+      <div class="field full">
+        <label>Synthèse de l'examen renforcé</label>
+        <textarea id="d_avis" style="min-height:220px" ${ro}>${escapeHtml(f.avis||'')}</textarea>
+      </div>
+    </div>`;
+  /* — Module décision — */
+  let blockDecision = '';
+  if(isAtraiter){
+    // Date du jour au format JJ/MM/AAAA pour pré-remplissage du champ date manager
+    const _now = new Date();
+    const _todayFr = `${String(_now.getDate()).padStart(2,'0')}/${String(_now.getMonth()+1).padStart(2,'0')}/${_now.getFullYear()}`;
+    const _deontoRequired = !isPthr && !f.signed_deonto;
+    blockDecision = `
+      <div ${_deontoRequired ? 'style="opacity:0.5; pointer-events:none;"' : ''}>
+        ${_deontoRequired ? `<div style="text-align:center;font-size:13px;color:#64748b;margin-bottom:10px;font-style:italic;padding:6px;background:#f1f5f9;border-radius:6px;">${icon('clock',14)} En attente de signature Déontologie</div>` : ''}
+      <div class="decision-card">
+        <div class="decision-title">${icon('scale',15)} Module de décision — Validation managériale</div>
+        <div class="g2" style="margin-bottom:14px">
+          <div class="field">
+            <label>Trigramme du responsable</label>
+            <input type="text" id="d_manager_trigramme" placeholder="Ex: JLD" maxlength="3" style="text-transform:uppercase">
+          </div>
+          <div class="field">
+            <label>Date de signature</label>
+            <input type="text" id="d_manager_date" readonly value="${_todayFr}">
+          </div>
+        </div>
+        <div class="decision-row">
+          <div class="field">
+            <label>Statut de validation / signature</label>
+            <select id="d_decision" onchange="onDecisionChange()">
+              <option value="">-- Sélectionner une décision --</option>
+              <option value="entree_accord_sans">${DECISIONS_LABELS.entree_accord_sans}</option>
+              <option value="entree_accord_avec">${DECISIONS_LABELS.entree_accord_avec}</option>
+              <option value="entree_refus">${DECISIONS_LABELS.entree_refus}</option>
+              <option value="poursuite_sans">${DECISIONS_LABELS.poursuite_sans}</option>
+              <option value="poursuite_avec">${DECISIONS_LABELS.poursuite_avec}</option>
+              <option value="rupture">${DECISIONS_LABELS.rupture}</option>
+            </select>
+          </div>
+          <button class="btn-sign" onclick="signFiche('${f.id}')">${icon('pen-line',14)} Signer</button>
+        </div>
+        <div id="d_commentaire_wrap" style="display:${f.decision ? 'block' : 'none'}; margin-top:14px">
+          <div class="field full">
+            <label>Commentaire du responsable</label>
+            <textarea id="d_manager_commentaire" placeholder="Commentaire du responsable..." style="min-height:90px"></textarea>
+          </div>
+        </div>
+        <div class="action-row">
+          <div class="sep">— ou retourner à l'analyste —</div>
+          <button class="btn-reject" onclick="toggleRejectModule(true)">${icon('corner-up-left',14)} Rejet</button>
+        </div>
+        <div id="reject-module" class="reject-module" style="display:none">
+          <div class="reject-title">${icon('corner-up-left',14)} Justifier le retour à l'analyste</div>
+          <div class="field full">
+            <label>Motif de rejet (obligatoire)</label>
+            <textarea id="d_motifRejet" placeholder="Indiquez précisément les éléments à corriger ou à compléter par l'analyste avant retransmission de la fiche…" style="min-height:120px"></textarea>
+          </div>
+          <div class="reject-actions">
+            <button class="btn-confirm-reject" onclick="rejectFiche('${f.id}')">✓ Confirmer le rejet</button>
+            <button class="btn-cancel" onclick="toggleRejectModule(false)">Annuler</button>
+          </div>
+        </div>
+      </div>
+      </div>`;
+  } else if(f.statut === 'signee'){
+    blockDecision = `
+      <div class="histo-decision signed">
+        <div class="histo-decision-title">${icon('check-circle',15)} Décision finale</div>
+        <div class="histo-decision-value">${escapeHtml(DECISIONS_LABELS[f.decision] || '—')}</div>
+        <div class="signed-by">Signée par <strong>${escapeHtml(f.decideur)}</strong> le ${fmtDate(f.dateDecision)}</div>
+        ${f.commentaireManager ? `
+        <div class="histo-motif" style="background:rgba(100,116,139,.08); color:var(--text-primary); border-left-color:var(--neutral)">
+          <strong style="color:var(--text-secondary)">Commentaire du responsable</strong>
+          ${escapeHtml(f.commentaireManager)}
+        </div>` : ''}
+        <button class="btn-cancel" style="margin-top:14px; width:100%; display:flex; justify-content:center; align-items:center; gap:8px; background:#fff; border:1.5px solid var(--error); color:var(--error-dark); font-weight:600;" onmouseover="this.style.background='rgba(239,68,68,.08)'" onmouseout="this.style.background='#fff'" onclick="revokeDecision('${f.id}')">${icon('corner-up-left',14)} Annuler la décision et rouvrir la fiche</button>
+      </div>`;
+  } else if(f.statut === 'rejetee'){
+    blockDecision = `
+      <div class="histo-decision rejected">
+        <div class="histo-decision-title">${icon('x-circle',15)} Décision finale</div>
+        <div class="histo-decision-value">Rejet — Retour à l'analyste</div>
+        <div class="signed-by">Rejetée par <strong>${escapeHtml(f.decideur||'—')}</strong> le ${fmtDate(f.dateDecision)}</div>
+        <div class="histo-motif">
+          <strong>Motif transmis à l'analyste</strong>
+          ${escapeHtml(f.motifRejet||'—')}
+        </div>
+        <button class="btn-cancel" style="margin-top:14px; width:100%; display:flex; justify-content:center; align-items:center; gap:8px; background:#fff; border:1.5px solid var(--error); color:var(--error-dark); font-weight:600;" onmouseover="this.style.background='rgba(239,68,68,.08)'" onmouseout="this.style.background='#fff'" onclick="revokeDecision('${f.id}')">${icon('corner-up-left',14)} Annuler la décision et rouvrir la fiche</button>
+      </div>`;
+  }
+  /* — Assemblage — */
+  $('detail-view').innerHTML = `
+    <div class="print-only" style="border:1.5px solid #000; padding:14px 18px; margin-bottom:18px; text-align:center; background:#fff;">
+      <div style="font-size:14pt; font-weight:bold; margin-bottom:4px;">
+        ${isPthr ? 'Personnes en lien pays/territoires listes PTHR / GAFI' : 'Personnes Politiquement Exposées'}
+      </div>
+      <div style="font-size:12pt; font-weight:bold; margin-bottom:10px;">
+        Avis sur entrée en / Poursuite de / Refus de / Rupture de la relation d'affaires
+      </div>
+      <div style="font-size:9pt; margin-bottom:6px;">
+        Cette fiche est destinée à répondre aux obligations légales de lutte contre le blanchiment des capitaux et le financement du terrorisme en application des articles L. 561-10-3 et suivants et des décrets d'application du Code monétaire et financier.
+      </div>
+      <div style="font-size:9pt; font-weight:bold; font-style:italic;">
+        Ce document doit obligatoirement être renseigné, signé et une copie doit être jointe au dossier du client.
+      </div>
+    </div>
+    <div class="print-footer">
+      ${isPthr
+        ? 'GCSB Pôle Sécurité financière – Unité analyses LCBFT/sanctions financières — Fiche PTHR-GAFI'
+        : 'GCSB Pôle Sécurité financière – Unité analyses LCBFT/sanctions financières — Fiche PPE RCA'}
+    </div>
+    <button class="btn-back" onclick="goBack()">← Retour à la liste</button>
+    <div class="detail-header">
+      <div class="detail-header-info">
+        <h2>${escapeHtml(fullName)} <span class="fiche-ref" style="font-size:14px; margin-left:8px; vertical-align:middle">${escapeHtml(refComplete)}</span></h2>
+        <div class="meta">
+          <span class="typo-badge ${f.typologie}">${isPthr ? 'Domiciliations sensibles' : 'PPE / RCA'}</span>
+          ${isAtraiter ? `
+            <select class="fiche-tag tag-${f.tag}" style="margin-left:0; cursor:pointer; outline:none; border-color:var(--border-dark); background:var(--surface);" onchange="updateFicheTag('${f.id}', this.value)">
+              <option value="urgent" ${f.tag === 'urgent' ? 'selected' : ''}>🔴 Urgente</option>
+              <option value="prioritaire" ${f.tag === 'prioritaire' ? 'selected' : ''}>🟡 Prioritaire</option>
+              <option value="sans_operation" ${f.tag === 'sans_operation' ? 'selected' : ''}>⚪ Sans opération</option>
+            </select>
+          ` : `<span class="fiche-tag" style="margin-left:0">${tagLabel}</span>`}
+          <span>${icon('calendar',14)} ${isAtraiter ? 'Reçue le' : 'Statuée le'} ${fmtDate(isAtraiter ? f.dateReception : f.dateDecision)}</span>
+          <span>${icon('user',14)} Analyste : <strong>${escapeHtml(f.analyste)}</strong></span>
+        </div>
+      </div>
+    </div>
+    ${isAtraiter ? '<div class="abox ao"><span style="font-size:18px">⚠️</span><div><strong>Mode édition</strong> — Vous pouvez modifier les champs ci-dessous avant de statuer.</div></div>' : '<div class="abox ai"><span style="font-size:18px">🔒</span><div><strong>Lecture seule</strong> — Cette fiche a déjà été statuée. Consultation à des fins de traçabilité.</div></div>'}
+    ${blockIdentite}
+    ${blockOperation}
+    ${blockAvis}
+    ${blockPrecoDocs}
+    ${blockDeonto}
+    ${blockDecision}
+    ${!isAtraiter ? `<button class="btn-cancel" onclick="window.print()" style="margin-top:20px; width:100%; display:flex; justify-content:center; align-items:center; gap:8px;">${icon('file-text',14)} Exporter en PDF</button>` : ''}
+  `;
+  // Scroll en haut
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    toggleDynamicFields();
+    onDecisionChange();
+    document.querySelectorAll('textarea').forEach(t => {
+      const resize = () => { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; };
+      t.addEventListener('input', resize);
+      resize();
+    });
+    if(window.generateFactivaInputs) {
+      window.generateFactivaInputs();
+      const fnums = f.doc_factiva_nums || [];
+      document.querySelectorAll('.factiva-num-input').forEach((inp, idx) => { if(fnums[idx]) inp.value = fnums[idx]; });
+    }
+  }, 50);
+}
+/* ═══════════════════════════════════════════════════
+   ACTIONS UI
+═══════════════════════════════════════════════════ */
+function setTypology(t){
+  state.typology = t;
+  state.tag = 'all';
+  state.histo = 'signee';
+  state.searchQuery = '';
+  state.page = 1;
+  state.view = 'list';
+  state.currentFicheId = null;
+  document.querySelectorAll('.typo-btn').forEach(b => b.classList.toggle('active', b.dataset.typo === t));
+  // Reset des pills
+  document.querySelectorAll('#filter-tags .pill').forEach(p => p.classList.toggle('active', p.dataset.tag === 'all'));
+  document.querySelectorAll('#filter-histo .pill').forEach(p => p.classList.toggle('active', p.dataset.histo === 'signee'));
+  render();
+}
+function setStatus(s){
+  state.status = s;
+  state.page = 1;
+  state.view = 'list';
+  state.currentFicheId = null;
+  document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.status === s));
+  render();
+}
+function setTag(t){
+  state.tag = t;
+  state.page = 1;
+  document.querySelectorAll('#filter-tags .pill').forEach(p => p.classList.toggle('active', p.dataset.tag === t));
+  renderList();
+}
+function setHisto(h){
+  state.histo = h;
+  state.page = 1;
+  document.querySelectorAll('#filter-histo .pill').forEach(p => p.classList.toggle('active', p.dataset.histo === h));
+  renderList();
+}
+function setSearch(val){
+  state.searchQuery = val || '';
+  state.page = 1;
+  renderList();
+}
+function setAnalysteFilter(val){
+  state.analysteFilter = val || 'all';
+  state.page = 1;
+  renderList();
+}
+function setSortBy(val){
+  state.sortBy = val || 'date_desc';
+  state.page = 1;
+  renderList();
+}
+function gotoPage(p){
+  state.page = p;
+  renderList();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function openDetail(id){
+  state.view = 'detail';
+  state.currentFicheId = id;
+  $('list-view').style.display = 'none';
+  $('detail-view').style.display = 'block';
+  renderDetail();
+}
+function goHome(){
+  if(state.view === 'detail' && state.currentFicheId) saveApp(true);
+  state.view = 'home';
+  state.currentFicheId = null;
+  render();
+}
+function goBack(){
+  if(state.view === 'detail' && state.currentFicheId) saveApp(true);
+  state.view = 'list';
+  state.currentFicheId = null;
+  $('detail-view').style.display = 'none';
+  $('list-view').style.display = 'block';
+  render();
+}
+function toggleRejectModule(show){
+  const m = $('reject-module');
+  if(!m) return;
+  m.style.display = show ? 'block' : 'none';
+  if(show){
+    setTimeout(() => {
+      const ta = $('d_motifRejet');
+      if(ta) ta.focus();
+    }, 50);
+  } else {
+    const ta = $('d_motifRejet');
+    if(ta) ta.value = '';
+  }
+}
+/* ═══════════════════════════════════════════════════
+   ACTIONS MÉTIER
+═══════════════════════════════════════════════════ */
+window.updateFicheTag = function(id, newTag){
+  const f = getFiche(id);
+  if(!f) return;
+  f.tag = newTag;
+  saveApp(true);
+  showToast('Priorité mise à jour avec succès', 'info');
+  renderDetail();
+};
+window.revokeDecision = function(id) {
+  const f = getFiche(id);
+  if(!f) return;
+  showConfirm({
+    title: 'Annuler la décision ?',
+    message: `Cela effacera la signature actuelle de la fiche ${f.id} et la replacera dans l'onglet « À traiter » pour modification.`,
+    okLabel: 'Annuler la décision',
+    icon: 'corner-up-left',
+    danger: true
+  }, () => {
+    // Réinitialisation des champs managériaux (logique inchangée)
+    f.statut = 'a_traiter';
+    f.decision = null;
+    f.dateDecision = null;
+    f.decideur = null;
+    f.commentaireManager = '';
+    f.motifRejet = '';
+    saveApp(true);
+    showToast(`La décision pour la fiche ${f.id} a été annulée.`, 'info');
+    renderDetail();
+  });
+};
+function persistFieldEdits(f){
+  // Enregistre les modifs UI sur l'objet f (champs modifiables)
+  const upd = (id) => { const el = $(id); return el ? el.value : null; };
+  f.client.civilite = upd('d_civ') ?? f.client.civilite;
+  if($('d_nom'))   f.client.nom      = $('d_nom').value;
+  if($('d_prenom'))f.client.prenom   = $('d_prenom').value;
+  if($('d_ric'))   f.client.ric      = $('d_ric').value;
+  if($('d_ddn'))   f.client.ddn      = $('d_ddn').value;
+  if($('d_typeOp'))   f.typeOperation = $('d_typeOp').value;
+  if($('d_montant'))  f.montant       = $('d_montant').value;
+  if($('d_contrat'))  f.contratNum    = $('d_contrat').value;
+  if($('d_avis'))     f.avis          = $('d_avis').value;
+  if(f.typologie === 'pthr'){
+    const val = id => $(id) ? $(id).value : null;
+    const chk = id => $(id) ? $(id).checked : false;
+    f.cnp_sa = val('d_cnp_sa'); f.cnp_ret = val('d_cnp_ret'); f.cnp_prev = val('d_cnp_prev');
+    f.client.nomMarital = val('d_nom_marital'); f.client.paysResidence = val('d_pays_residence');
+    f.is_ppe = chk('d_is_ppe');
+    f.paysSensible = val('d_pays');
+    f.chk_pthr = chk('d_chk_pthr'); f.chk_gafi1 = chk('d_chk_gafi1'); f.chk_gafi2 = chk('d_chk_gafi2');
+    f.lien_postale = chk('d_lien_postale'); f.lien_fiscale = chk('d_lien_fiscale'); f.lien_bancaire = chk('d_lien_bancaire'); f.lien_autre = chk('d_lien_autre'); f.lien_autre_text = val('d_lien_autre_text');
+    f.connu_cliente = chk('d_connu_cliente'); f.connu_benef_nom = chk('d_connu_benef_nom'); f.connu_benef_eff_pm = chk('d_connu_benef_eff_pm'); f.connu_benef_clause = chk('d_connu_benef_clause'); f.connu_benef_eff_desig = chk('d_connu_benef_eff_desig'); f.connu_autre = chk('d_connu_autre'); f.connu_autre_text = val('d_connu_autre_text');
+    f.concerne = val('d_concerne'); f.origineDetection = val('d_origineDetection'); f.origineDetection_autre = val('d_origineDetection_autre'); f.dateDetection = val('d_dateDetection'); f.montant_operation = val('d_montant_operation');
+    const precoParEl = document.getElementById('d_preco_par');
+    if (precoParEl) { f.preco_par = precoParEl.value; f.analyste = precoParEl.value; }
+    if (document.getElementById('d_preco_analyste')) f.preco_analyste = val('d_preco_analyste');
+    if (document.getElementById('d_preco_date')) f.preco_date = val('d_preco_date');
+    f.doc_factiva = chk('d_doc_factiva'); f.doc_factiva_nb = val('d_doc_factiva_nb'); f.doc_factiva_nums = Array.from(document.querySelectorAll('.factiva-num-input')).map(i => i.value);
+    f.doc_id = chk('d_doc_id'); f.doc_id_type = val('d_doc_id_type'); f.doc_id_type_autre = val('d_doc_id_type_autre'); f.doc_id_num = val('d_doc_id_num'); f.doc_id_date = val('d_doc_id_date');
+    f.doc_kyc = chk('d_doc_kyc'); f.kyc_dom = chk('d_kyc_dom'); f.kyc_dom_date = val('d_kyc_dom_date'); f.kyc_impot = chk('d_kyc_impot'); f.kyc_impot_date = val('d_kyc_impot_date'); f.kyc_auto = chk('d_kyc_auto'); f.kyc_auto_date = val('d_kyc_auto_date'); f.kyc_paie = chk('d_kyc_paie'); f.kyc_paie_date = val('d_kyc_paie_date'); f.kyc_diag = chk('d_kyc_diag'); f.kyc_diag_date = val('d_kyc_diag_date'); f.kyc_attest = chk('d_kyc_attest'); f.kyc_attest_date = val('d_kyc_attest_date'); f.kyc_frc = chk('d_kyc_frc'); f.kyc_frc_date = val('d_kyc_frc_date'); f.kyc_frcons = chk('d_kyc_frcons'); f.kyc_frcons_date = val('d_kyc_frcons_date');
+    f.doc_ptf_cli = chk('d_doc_ptf_cli'); f.doc_ptf_ben = chk('d_doc_ptf_ben');
+    f.doc_assu = chk('d_doc_assu'); f.doc_assu_text = val('d_doc_assu_text');
+    f.doc_justif = chk('d_doc_justif'); f.doc_releve = chk('d_doc_releve'); f.doc_media = chk('d_doc_media');
+    f.doc_autre = chk('d_doc_autre'); f.doc_autre_text = val('d_doc_autre_text');
+  } else {
+    const val = id => document.getElementById(id) ? document.getElementById(id).value : null;
+    const chk = id => document.getElementById(id) ? document.getElementById(id).checked : false;
+    const rad = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; };
+    f.cnp_sa = val('d_cnp_sa'); f.cnp_ret = val('d_cnp_ret'); f.cnp_prev = val('d_cnp_prev');
+    f.client.civilite = val('d_civ'); f.client.nom = val('d_nom'); f.client.nomMarital = val('d_nom_marital'); f.client.prenom = val('d_prenom');
+    f.client.ddn = val('d_ddn'); f.client.paysResidence = val('d_pays_residence'); f.client.ric = val('d_ric');
+    f.ppe_lien_pays_sf = chk('d_ppe_lien_pays_sf');
+    f.ppe_is_ppe = chk('d_ppe_is_ppe'); f.ppe_is_rca_famille = chk('d_ppe_is_rca_famille'); f.ppe_is_rca_assoc = chk('d_ppe_is_rca_assoc');
+    f.ppe_nom_ppe = val('d_ppe_nom_ppe'); f.ppe_lien_ppe = val('d_ppe_lien_ppe');
+    f.ppe_connu_cliente = chk('d_ppe_connu_cliente'); f.ppe_connu_benef_nom = chk('d_ppe_connu_benef_nom'); f.ppe_connu_benef_eff_pm = chk('d_ppe_connu_benef_eff_pm');
+    f.ppe_cat = rad('ppe_cat');
+    f.ppe_concerne = val('d_ppe_concerne'); f.typeOperation = val('d_typeOp'); f.origineDetection = val('d_origineDetection');
+    f.ppe_origineDetection_autre = val('d_ppe_origineDetection_autre'); f.dateDetection = val('d_dateDetection'); f.montant = val('d_montant'); f.montant_operation = val('d_montant_operation');
+    // SAUVEGARDE COMMUNE PRECO ET DOCS (Identique à PTHR)
+    const precoParEl = document.getElementById('d_preco_par');
+    if (precoParEl) { f.preco_par = precoParEl.value; f.analyste = precoParEl.value; }
+    if (document.getElementById('d_preco_analyste')) f.preco_analyste = val('d_preco_analyste');
+    if (document.getElementById('d_preco_date')) f.preco_date = val('d_preco_date');
+    f.doc_factiva = chk('d_doc_factiva'); f.doc_factiva_nb = val('d_doc_factiva_nb');
+    f.doc_factiva_nums = Array.from(document.querySelectorAll('.factiva-num-input')).map(i => i.value);
+    f.doc_id = chk('d_doc_id'); f.doc_id_type = val('d_doc_id_type'); f.doc_id_type_autre = val('d_doc_id_type_autre'); f.doc_id_num = val('d_doc_id_num'); f.doc_id_date = val('d_doc_id_date');
+    f.doc_kyc = chk('d_doc_kyc');
+    f.kyc_dom = chk('d_kyc_dom'); f.kyc_dom_date = val('d_kyc_dom_date');
+    f.kyc_impot = chk('d_kyc_impot'); f.kyc_impot_date = val('d_kyc_impot_date');
+    f.kyc_auto = chk('d_kyc_auto'); f.kyc_auto_date = val('d_kyc_auto_date');
+    f.kyc_paie = chk('d_kyc_paie'); f.kyc_paie_date = val('d_kyc_paie_date');
+    f.kyc_diag = chk('d_kyc_diag'); f.kyc_diag_date = val('d_kyc_diag_date');
+    f.kyc_attest = chk('d_kyc_attest'); f.kyc_attest_date = val('d_kyc_attest_date');
+    f.kyc_frc = chk('d_kyc_frc'); f.kyc_frc_date = val('d_kyc_frc_date');
+    f.kyc_frcons = chk('d_kyc_frcons'); f.kyc_frcons_date = val('d_kyc_frcons_date');
+    f.doc_ptf_cli = chk('d_doc_ptf_cli'); f.doc_ptf_ben = chk('d_doc_ptf_ben');
+    f.doc_assu = chk('d_doc_assu'); f.doc_assu_text = val('d_doc_assu_text');
+    f.doc_justif = chk('d_doc_justif'); f.doc_releve = chk('d_doc_releve'); f.doc_media = chk('d_doc_media');
+    f.doc_autre = chk('d_doc_autre'); f.doc_autre_text = val('d_doc_autre_text');
+    // Champs Déontologie
+    f.deonto_trigramme = (document.getElementById('d_deonto_trigramme')?.value || '').trim().toUpperCase() || f.deonto_trigramme;
+    f.deonto_detection = val('d_deonto_detection') || f.deonto_detection;
+    f.deonto_avis = document.querySelector('input[name="deonto_avis"]:checked')?.value || f.deonto_avis;
+    f.deonto_explications = val('d_deonto_explications') || f.deonto_explications;
+  }
+}
+function onDecisionChange(){
+  const sel = $('d_decision');
+  const wrap = $('d_commentaire_wrap');
+  if(!sel || !wrap) return;
+  if (!sel.value) {
+    const commentaire = $('d_manager_commentaire');
+    if (commentaire) commentaire.value = '';
+  }
+  wrap.style.display = sel.value ? 'block' : 'none';
+}
+function saveApp(isAuto = true) {
+  // 1. Sauvegarder les saisies en cours à l'écran si on est sur une fiche
+  let target = null;
+  if (state.view === 'detail' && state.currentFicheId) {
+    const f = getFiche(state.currentFicheId);
+    if (f) {
+      // La capture des champs DOM n'a de sens que si la fiche est encore éditable ;
+      // en revanche l'écriture serveur ci-dessous doit avoir lieu dans tous les cas
+      // (ex. juste après signFiche()/rejectFiche()/revokeDecision(), qui viennent de
+      // faire passer f.statut à 'signee'/'rejetee'/'a_traiter').
+      if (f.statut === 'a_traiter') {
+        persistFieldEdits(f);
+      }
+      target = f;
+    }
+  }
+  // 2. Écrire sur le serveur (la fiche actuellement affichée, quel que soit son statut)
+  if (target) {
+    apiSaveFiche(target).then(ok => {
+      if (!ok) showToast('Sauvegarde impossible — vérifiez que le serveur est démarré.', 'error');
+    });
+  }
+  // 3. Mettre à jour l'heure d'affichage
+  const now = new Date();
+  const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+  const ind = document.getElementById('autosave-time');
+  if (ind) ind.textContent = 'Auto-save à ' + timeStr;
+  // 4. Notification visuelle (uniquement si clic manuel)
+  if (!isAuto) {
+    showToast('Données enregistrées', 'success');
+  }
+}
+// Lancement de l'autosave toutes les 5 minutes (300 000 ms)
+
+function signDeonto(id){
+  const f = getFiche(id);
+  if(!f) return;
+  const trigramme = (document.getElementById('d_deonto_trigramme')?.value || '').trim().toUpperCase();
+  const avis = document.querySelector('input[name="deonto_avis"]:checked')?.value || '';
+  if(!trigramme) { showToast('Trigramme obligatoire', 'error'); return; }
+  if(!avis) { showToast('Sélectionnez un avis avant de signer', 'error'); return; }
+  showConfirm({
+    title: 'Confirmer la signature de la Déontologie ?',
+    message: `Vous allez signer l'avis du Pôle Déontologie pour la fiche ${f.id}.\n\nCette signature est définitive : elle ne pourra pas être annulée et débloquera la signature du responsable.`,
+    okLabel: 'Signer (Déontologie)',
+    icon: 'shield-check'
+  }, () => {
+    persistFieldEdits(f);
+    const now = new Date();
+    f.signed_deonto = true;
+    f.deonto_trigramme = trigramme;
+    f.deonto_date_signature = now.toISOString();
+    saveApp(false);
+    render();
+  });
+}
+function signFiche(id){
+  const f = getFiche(id);
+  if(!f) return;
+  if(f.typologie === 'ppe' && !f.signed_deonto){
+    showToast('Action interdite : La signature du Pôle Déontologie est requise.', 'error');
+    return;
+  }
+  const decision = $('d_decision') ? $('d_decision').value : '';
+  const trigrammeSaisi = $('d_manager_trigramme') ? $('d_manager_trigramme').value.trim().toUpperCase() : '';
+  const commentaireSaisi = $('d_manager_commentaire') ? $('d_manager_commentaire').value.trim() : '';
+  if(!trigrammeSaisi){
+    showToast('Le trigramme du responsable est obligatoire pour signer.', 'error');
+    const inp = $('d_manager_trigramme');
+    if(inp){ inp.focus(); inp.style.borderColor = 'var(--error)'; setTimeout(()=>{ inp.style.borderColor=''; }, 2000); }
+    return;
+  }
+  if(!decision){
+    showToast('Veuillez sélectionner un statut de validation avant de signer.', 'error');
+    const sel = $('d_decision');
+    if(sel){ sel.focus(); sel.style.borderColor = 'var(--error)'; setTimeout(()=>{ sel.style.borderColor=''; }, 2000); }
+    return;
+  }
+  showConfirm({
+    title: 'Confirmer la signature ?',
+    message: `Vous allez signer la fiche ${f.id} avec le statut « ${DECISIONS_LABELS[decision]} ».\n\nCette action est définitive et déplacera la fiche vers l'historique.`,
+    okLabel: 'Signer la fiche',
+    icon: 'pen-line'
+  }, () => {
+    persistFieldEdits(f);
+    f.statut = 'signee';
+    f.decision = decision;
+    f.dateDecision = new Date().toISOString();
+    f.decideur = trigrammeSaisi;
+    f.commentaireManager = commentaireSaisi;
+    showToast(`Fiche ${f.id} signée : ${DECISIONS_LABELS[decision]}`, 'success');
+    saveApp(true);
+    goBack();
+  });
+}
+function rejectFiche(id){
+  const f = getFiche(id);
+  if(!f) return;
+  const motif = $('d_motifRejet') ? $('d_motifRejet').value.trim() : '';
+  if(!motif){
+    showToast('Le motif de rejet est obligatoire pour notifier l\'analyste.', 'error');
+    const ta = $('d_motifRejet');
+    if(ta){ ta.focus(); ta.style.borderColor = 'var(--error)'; setTimeout(()=>{ ta.style.borderColor=''; }, 2000); }
+    return;
+  }
+  if(motif.length < 20){
+    showToast('Le motif doit faire au moins 20 caractères pour être suffisamment explicite.', 'error');
+    return;
+  }
+  showConfirm({
+    title: 'Confirmer le rejet ?',
+    message: `La fiche ${f.id} sera rejetée et retournée à l'analyste ${f.analyste} pour correction.`,
+    okLabel: 'Rejeter la fiche',
+    icon: 'corner-up-left',
+    danger: true
+  }, () => {
+    persistFieldEdits(f);
+    f.statut = 'rejetee';
+    f.decision = null;
+    f.motifRejet = motif;
+    f.dateDecision = new Date().toISOString();
+    const mgrTrigramme = document.getElementById('d_manager_trigramme') ? document.getElementById('d_manager_trigramme').value.trim().toUpperCase() : '';
+    f.decideur = mgrTrigramme || 'MGR';
+    showToast(`Fiche ${f.id} rejetée — retour à l'analyste ${f.analyste}`, 'info');
+    saveApp(true);
+    goBack();
+  });
+}
+/* ═══════════════════════════════════════════════════
+   STATISTIQUES
+═══════════════════════════════════════════════════ */
+function openStats(){
+  state.view = 'stats';
+  state.currentFicheId = null;
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  const tabStats = $('tab-stats');
+  if(tabStats) tabStats.classList.add('active');
+  renderStats();
+  render();
+}
+window.updateStatsFilter = function(key, val) {
+  if(!state.stats) return;
+  state.stats[key] = val;
+  renderStats();
+};
+window.resetStatsFilters = function() {
+  state.stats = null;
+  const filterArea = document.getElementById('stats-filters-area');
+  if(filterArea) filterArea.innerHTML = '';
+  renderStats();
+};
+function renderStats(){
+  const wrap = $('stats-view');
+  if(!wrap) return;
+  if(!state.stats) {
+    state.stats = {
+      dateFrom: '', dateTo: '', statut: 'all', analyste: 'all',
+      decideur: 'all', decision: 'all', ppeType: 'all', ppeCat: 'all'
+    };
+  }
+  const s = state.stats;
+  let fichesTypo = fiches.filter(f => f.typologie === state.typology);
+  const allAnalystes = [...new Set(fichesTypo.map(f => f.analyste).filter(Boolean))].sort();
+  const allDecideurs = [...new Set(fichesTypo.map(f => f.decideur).filter(Boolean))].sort();
+  // Bornes de période
+  const dFrom = s.dateFrom ? (() => { const d = new Date(s.dateFrom); d.setHours(0,0,0,0); return d; })() : null;
+  const dTo   = s.dateTo   ? (() => { const d = new Date(s.dateTo);   d.setHours(23,59,59,999); return d; })() : null;
+  // Filtres transverses appliqués sur le jeu complet en amont
+  let base = fichesTypo;
+  if(s.statut === 'traitees') base = base.filter(f => f.statut === 'signee' || f.statut === 'rejetee');
+  else if(s.statut !== 'all') base = base.filter(f => f.statut === s.statut);
+  if(s.decision !== 'all') base = base.filter(f => f.decision === s.decision);
+  if(s.analyste !== 'all') base = base.filter(f => f.analyste === s.analyste);
+  if(s.decideur !== 'all') base = base.filter(f => f.decideur === s.decideur);
+  if(state.typology === 'ppe') {
+    if(s.ppeType === 'ppe') base = base.filter(f => f.ppe_is_ppe);
+    if(s.ppeType === 'rca') base = base.filter(f => f.ppe_is_rca_famille || f.ppe_is_rca_assoc);
+    if(s.ppeCat !== 'all') base = base.filter(f => f.ppe_cat === s.ppeCat);
+  }
+  // Helpers de période
+  const inReceptionPeriod = f => {
+    const d = new Date(f.dateReception);
+    return (!dFrom || d >= dFrom) && (!dTo || d <= dTo);
+  };
+  const inDecisionPeriod = f => {
+    if(!f.dateDecision) return false;
+    const d = new Date(f.dateDecision);
+    return (!dFrom || d >= dFrom) && (!dTo || d <= dTo);
+  };
+  // KPIs — calculés indépendamment sur l'axe réception et l'axe décision
+  const volRecues       = base.filter(inReceptionPeriod).length;
+  const volSignees      = base.filter(f => f.statut === 'signee'  && inDecisionPeriod(f)).length;
+  const volRejetees     = base.filter(f => f.statut === 'rejetee' && inDecisionPeriod(f)).length;
+  const restantBase = base.filter(f => {
+    // 1. Si la fiche a été reçue APRÈS la date de fin de filtre, elle n'existait pas encore dans le stock
+    const dRec = new Date(f.dateReception);
+    if (dTo && dRec > dTo) return false;
+    // 2. Si la fiche n'a pas encore de décision, elle est d'office dans le stock global
+    if (!f.dateDecision) return true;
+    // 3. Si elle a une décision, elle est dans le stock SEULEMENT SI la décision a été prise APRÈS la date de fin de filtre
+    const dDec = new Date(f.dateDecision);
+    return dTo ? dDec > dTo : false;
+  });
+  const volRestantPeriode = restantBase.length;
+  const restantUrgent = restantBase.filter(f => f.tag === 'urgent').length;
+  const restantPrio   = restantBase.filter(f => f.tag === 'prioritaire').length;
+  const restantSans   = restantBase.filter(f => f.tag === 'sans_operation').length;
+  const tooltipText   = `Urgent: ${restantUrgent} | Prio: ${restantPrio} | Sans op: ${restantSans}`;
+  // SLA & taux de rejet sur les fiches décidées dans la période
+  const decideesPeriode = base.filter(f => (f.statut === 'signee' || f.statut === 'rejetee') && inDecisionPeriod(f));
+  const tauxRejet = decideesPeriode.length > 0 ? ((volRejetees / decideesPeriode.length) * 100).toFixed(2) : "0.00";
+  let totalDays = 0, countSla = 0;
+  decideesPeriode.forEach(f => {
+    if(f.dateReception && f.dateDecision) {
+      totalDays += Math.max(0, Math.ceil((new Date(f.dateDecision) - new Date(f.dateReception)) / (1000 * 60 * 60 * 24)));
+      countSla++;
+    }
+  });
+  const avgSla = countSla > 0 ? (totalDays / countSla).toFixed(1) : 0;
+  const typoName = state.typology === 'pthr' ? 'Domiciliations sensibles' : 'PPE / RCA';
+  const periodeLibelle = (dFrom || dTo)
+    ? `${dFrom ? fmtDateShort(s.dateFrom) : '…'} → ${dTo ? fmtDateShort(s.dateTo) : '…'}`
+    : 'Toutes périodes';
+  // Coquille globale : rendue une seule fois (préserve le focus des inputs)
+  if (!wrap.querySelector('#stats-container-split')) {
+    wrap.innerHTML = `
+      <div class="detail-header" style="border-left-color: var(--accent-light);">
+        <div class="detail-header-info">
+          <h2 id="stats-title">Tableau de bord</h2>
+          <div class="meta"><span id="stats-subtitle"></span></div>
+        </div>
+      </div>
+      <div id="stats-container-split">
+        <div id="stats-filters-area"></div>
+        <div id="stats-results-area"></div>
+      </div>
+    `;
+  }
+  $('stats-title').textContent = `Tableau de bord : ${typoName}`;
+  $('stats-subtitle').innerHTML = `${icon('info',14)} Bilan de période : ${escapeHtml(periodeLibelle)}`;
+  // Zone filtres : rendue une seule fois (préserve le focus des inputs)
+  const filterArea = $('stats-filters-area');
+  if (filterArea && !filterArea.innerHTML) {
+    const optAnalystes = allAnalystes.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('');
+    const optDecideurs = allDecideurs.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+    let filtresHtml = `
+      <div class="card" style="margin-bottom: 22px; background: var(--surface-hover);">
+        <div class="card-title" style="margin-bottom: 14px; padding-bottom: 10px;">${icon('list',14)} Filtres d'analyse</div>
+        <div class="g4">
+          <div class="field"><label>Période (Du)</label><input type="date" id="sf_dfrom" value="${s.dateFrom}" onblur="updateStatsFilter('dateFrom', this.value)"></div>
+          <div class="field"><label>Période (Au)</label><input type="date" id="sf_dto" value="${s.dateTo}" onblur="updateStatsFilter('dateTo', this.value)"></div>
+          <div class="field"><label>Statut</label>
+            <select id="sf_statut" onchange="updateStatsFilter('statut', this.value)">
+              <option value="all">Tous les statuts</option>
+              <option value="a_traiter">À traiter</option>
+              <option value="traitees">Traitées (Signées + Rejetées)</option>
+              <option value="signee">Signées</option>
+              <option value="rejetee">Rejetées</option>
+            </select>
+          </div>
+          <div class="field"><label>Décision</label>
+            <select id="sf_decision" onchange="updateStatsFilter('decision', this.value)">
+              <option value="all">Toutes les décisions</option>
+              <option value="entree_accord_sans">Accord entrée (sans surveillance)</option>
+              <option value="entree_accord_avec">Accord entrée (avec surveillance)</option>
+              <option value="entree_refus">Refus entrée</option>
+              <option value="poursuite_sans">Poursuite (sans surveillance)</option>
+              <option value="poursuite_avec">Poursuite (avec surveillance)</option>
+              <option value="rupture">Rupture</option>
+            </select>
+          </div>
+          <div class="field"><label>Analyste</label>
+            <select onchange="updateStatsFilter('analyste', this.value)">
+              <option value="all">Tous les analystes</option>${optAnalystes}
+            </select>
+          </div>
+          <div class="field"><label>Signataire</label>
+            <select onchange="updateStatsFilter('decideur', this.value)">
+              <option value="all">Tous les signataires</option>${optDecideurs}
+            </select>
+          </div>`;
+    if(state.typology === 'ppe') {
+      filtresHtml += `
+          <div class="field"><label>Type PPE/RCA</label>
+            <select onchange="updateStatsFilter('ppeType', this.value)">
+              <option value="all">Tous (PPE & RCA)</option>
+              <option value="ppe">Fiches PPE</option>
+              <option value="rca">Fiches RCA</option>
+            </select>
+          </div>
+          <div class="field"><label>Catégorie PPE</label>
+            <select onchange="updateStatsFilter('ppeCat', this.value)">
+              <option value="all">Toutes</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+          </div>`;
+    }
+    filtresHtml += `
+        </div>
+        <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+          <button class="btn-cancel" onclick="resetStatsFilters()" style="font-size:12px; padding:6px 14px;">Réinitialiser tous les filtres</button>
+        </div>
+      </div>`;
+    filterArea.innerHTML = filtresHtml;
+    if($('sf_statut'))   $('sf_statut').value   = s.statut;
+    if($('sf_decision')) $('sf_decision').value = s.decision;
+  }
+  // Zone résultats : re-rendue à chaque appel (valeurs dynamiques)
+  const resultsArea = $('stats-results-area');
+  if (resultsArea) {
+    resultsArea.innerHTML = `
+      <div class="card">
+        <div class="card-title">BILAN DE PÉRIODE</div>
+        <div class="g4">
+          <div style="background:var(--surface-raised); padding:20px; border-radius:var(--radius); border:1px solid var(--border); text-align:center;">
+            <div style="font-size:12px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Fiches reçues sur la période</div>
+            <div style="font-size:32px; font-weight:800; color:var(--primary); margin-top:8px;">${volRecues}</div>
+          </div>
+          <div style="background:rgba(79,70,229,.05); padding:20px; border-radius:var(--radius); border:1px solid rgba(79,70,229,.15); text-align:center;">
+            <div style="font-size:12px; color:var(--accent-dark); font-weight:700; text-transform:uppercase;">Stock global restant à traiter</div>
+            <div style="font-size:32px; font-weight:800; color:var(--accent); margin-top:8px;">${volRestantPeriode}</div>
+            <div style="margin-top:12px; padding-top:10px; border-top:1px solid rgba(79,70,229,.1); font-size:11px; font-weight:600; color:var(--accent-dark); display:flex; justify-content:center; gap:10px;">
+              <span>🔴 Urgent: ${restantUrgent}</span>
+              <span>🟡 Prio: ${restantPrio}</span>
+              <span>⚪ Sans op: ${restantSans}</span>
+            </div>
+          </div>
+          <div style="background:rgba(16,185,129,.05); padding:20px; border-radius:var(--radius); border:1px solid rgba(16,185,129,.15); text-align:center;">
+            <div style="font-size:12px; color:var(--success-dark); font-weight:700; text-transform:uppercase;">Fiches signées sur la période</div>
+            <div style="font-size:32px; font-weight:800; color:var(--success); margin-top:8px;">${volSignees}</div>
+          </div>
+          <div style="background:rgba(239,68,68,.05); padding:20px; border-radius:var(--radius); border:1px solid rgba(239,68,68,.15); text-align:center;">
+            <div style="font-size:12px; color:var(--error-dark); font-weight:700; text-transform:uppercase;">Fiches rejetées sur la période</div>
+            <div style="font-size:32px; font-weight:800; color:var(--error); margin-top:8px;">${volRejetees}</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 20px; text-align: right;">
+        <button class="btn-sign" style="background:var(--primary); box-shadow:none;" onclick="exportStatsToCSV()">
+          ${icon('file-text', 14)} Exporter vers Excel (CSV)
+        </button>
+      </div>
+      <div class="card" style="margin-top: 18px;">
+        <div class="card-title">PERFORMANCE &amp; DÉLAIS (SLA)</div>
+        <div class="g2">
+          <div style="background:var(--surface-raised); padding:20px; border-radius:var(--radius); border:1px solid var(--border); display:flex; align-items:center; gap:16px;">
+            <div style="width:48px; height:48px; border-radius:12px; background:rgba(79,70,229,.1); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:24px;">${icon('clock', 24)}</div>
+            <div>
+              <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Délai moyen de traitement</div>
+              <div style="font-size:24px; font-weight:800; color:var(--primary); margin-top:2px;">${avgSla} <span style="font-size:14px; color:var(--text-secondary);">jour(s)</span></div>
+            </div>
+          </div>
+          <div style="background:var(--surface-raised); padding:20px; border-radius:var(--radius); border:1px solid var(--border); display:flex; align-items:center; gap:16px;">
+            <div style="width:48px; height:48px; border-radius:12px; background:rgba(239,68,68,.1); color:var(--error); display:flex; align-items:center; justify-content:center; font-size:24px;">${icon('corner-up-left', 24)}</div>
+            <div>
+              <div style="font-size:11px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Taux de rejet</div>
+              <div style="font-size:24px; font-weight:800; color:var(--primary); margin-top:2px;">${tauxRejet} <span style="font-size:14px; color:var(--text-secondary);">%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+function exportStatsToCSV() {
+  _ficheRefCache = null;
+  const s = state.stats || { dateFrom: '', dateTo: '', statut: 'all', analyste: 'all', decideur: 'all', decision: 'all', ppeType: 'all', ppeCat: 'all' };
+  // Filtres transverses
+  let base = fiches.filter(f => f.typologie === state.typology);
+  if(s.statut === 'traitees') base = base.filter(f => f.statut === 'signee' || f.statut === 'rejetee');
+  else if(s.statut !== 'all') base = base.filter(f => f.statut === s.statut);
+  if(s.decision !== 'all') base = base.filter(f => f.decision === s.decision);
+  if(s.analyste !== 'all') base = base.filter(f => f.analyste === s.analyste);
+  if(s.decideur !== 'all') base = base.filter(f => f.decideur === s.decideur);
+  if(state.typology === 'ppe') {
+    if(s.ppeType === 'ppe') base = base.filter(f => f.ppe_is_ppe);
+    if(s.ppeType === 'rca') base = base.filter(f => f.ppe_is_rca_famille || f.ppe_is_rca_assoc);
+    if(s.ppeCat !== 'all') base = base.filter(f => f.ppe_cat === s.ppeCat);
+  }
+  // Bornes de période
+  const dFrom = s.dateFrom ? (() => { const d = new Date(s.dateFrom); d.setHours(0,0,0,0); return d; })() : null;
+  const dTo   = s.dateTo   ? (() => { const d = new Date(s.dateTo);   d.setHours(23,59,59,999); return d; })() : null;
+  // Union bilan : reçues dans la période OU décidées dans la période
+  // 1. Définition du périmètre (union : reçues + décidées + restant dans la période)
+  const inBilan = f => {
+    const dRec = new Date(f.dateReception);
+    const recues = (!dFrom || dRec >= dFrom) && (!dTo || dRec <= dTo);
+    const dDec = f.dateDecision ? new Date(f.dateDecision) : null;
+    const decidees = dDec && (!dFrom || dDec >= dFrom) && (!dTo || dDec <= dTo);
+    const restant = (!dTo || dRec <= dTo) && (!dDec || dDec > dTo);
+    return recues || decidees || restant;
+  };
+  const list = (dFrom || dTo) ? base.filter(inBilan) : base;
+  // 2. En-tête enrichi pour double lecture (statut réel vs statut au reporting)
+  let csv = "﻿Référence;Client;Date Réception;Date Décision Réelle;Statut Actuel;Statut au Reporting;Décision Réelle;Délai Réel;Délai au Reporting;Analyste\n";
+  // 3. Boucle sur les fiches
+  list.forEach(f => {
+    const dRec    = f.dateReception ? fmtDateShort(f.dateReception) : '';
+    const dDecObj = f.dateDecision ? new Date(f.dateDecision) : null;
+    const dDecStr = f.dateDecision ? fmtDateShort(f.dateDecision) : '';
+    const estStatueeAvantFin  = dDecObj && (!dTo || dDecObj <= dTo);
+    const statutReporting     = estStatueeAvantFin ? f.statut : 'a_traiter';
+    const decisionReporting   = estStatueeAvantFin ? (f.decision ? DECISIONS_LABELS[f.decision] || f.decision : '') : '';
+    const delayReporting      = estStatueeAvantFin ? Math.ceil((dDecObj - new Date(f.dateReception)) / (1000 * 60 * 60 * 24)) : '';
+    const delayReel           = dDecObj ? Math.ceil((dDecObj - new Date(f.dateReception)) / (1000 * 60 * 60 * 24)) : '';
+    const row = [
+      getFicheReference(f),
+      ((f.client?.nom || '') + ' ' + (f.client?.prenom || '')).replace(/;/g, ','),
+      dRec,
+      dDecStr,
+      f.statut,
+      statutReporting,
+      f.decision ? DECISIONS_LABELS[f.decision] || f.decision : '',
+      delayReel,
+      delayReporting,
+      f.analyste || ''
+    ].join(';');
+    csv += row + "\n";
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.setAttribute("href", url);
+  link.setAttribute("download", `Export_SF_${state.typology}_${new Date().toISOString().slice(0,10)}.csv`);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+/* ═══════════════════════════════════════════════════
+   ROUTEUR
+═══════════════════════════════════════════════════ */
+function render(){
+  updateCounters();
+  const vHome   = $('home-view');
+  const vList   = $('list-view');
+  const vDetail = $('detail-view');
+  const vStats  = $('stats-view');
+  const typoBar = document.querySelector('.typo-bar');
+  const tabsWrap = document.querySelector('.tabs-wrap');
+  // Affichage des vues principales
+  if(vHome)   vHome.style.display   = (state.view === 'home')   ? 'flex'  : 'none';
+  if(vList)   vList.style.display   = (state.view === 'list')   ? 'block' : 'none';
+  if(vDetail) vDetail.style.display = (state.view === 'detail') ? 'block' : 'none';
+  if(vStats)  vStats.style.display  = (state.view === 'stats')  ? 'block' : 'none';
+  // SÉCURITÉ : Masquer la barre de typologie et les onglets en dehors de la vue liste/stats
+  if(typoBar)  typoBar.style.display  = (state.view === 'list' || state.view === 'stats') ? 'block' : 'none';
+  if(tabsWrap) tabsWrap.style.display = (state.view === 'list' || state.view === 'stats') ? 'block' : 'none';
+  // SÉCURITÉ : Masquer la typologie non sélectionnée pour empêcher le switch
+  document.querySelectorAll('.typo-btn').forEach(b => {
+    b.style.display = (b.dataset.typo === state.typology) ? 'flex' : 'none';
+  });
+  if(state.view === 'detail'){
+    renderDetail();
+  } else if(state.view === 'list'){
+    renderList();
+  }
+}
+/* ═══════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', async function(){
+  await initFiches();
+  render();
+});
+// Sauvegarde supplémentaire à la fermeture/mise en arrière-plan de l'onglet (en plus de
+// la sauvegarde déclenchée à chaque signature/rejet/tag et de la boucle des 5 minutes).
+
+
+/* ═══════════════════════════════════════════════════
+   CORRECTIF EXPORT PDF : AUTO-RESIZE TEXTAREAS
+═══════════════════════════════════════════════════ */
+window.addEventListener('beforeprint', function() {
+  // Synchronise la visibilité des champs dynamiques (wrap_*) selon l'état des cases/selects
+  if(typeof toggleDynamicFields === 'function') toggleDynamicFields();
+  // Retire toute contrainte de hauteur pour laisser les textareas s'étendre librement sur le PDF
+  document.querySelectorAll('textarea').forEach(t => {
+    t.style.height = 'auto';
+    t.style.maxHeight = 'none';
+  });
+});
+window.addEventListener('afterprint', function() {
+  if(typeof initAutoResize === 'function') initAutoResize();
+});
+</script>
+<script>
+/* ═══════════════════════════════════════════════════
+   FINTECH ELITE — Micro-interactions & Animations
+═══════════════════════════════════════════════════ */
+(function() {
+  /* Ripple effect on action buttons */
+  function addRipple(el) {
+    if (el.dataset.ripple) return;
+    el.dataset.ripple = '1';
+    el.classList.add('ripple-host');
+    el.addEventListener('click', function(e) {
+      if (this.disabled || this.getAttribute('disabled') !== null) return;
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height) * 1.45;
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      const wave = document.createElement('span');
+      wave.className = 'ripple-wave';
+      const darkBg = this.classList.contains('btn-sign') || this.classList.contains('btn-confirm-reject') ||
+                     (this.classList.contains('typo-btn') && this.classList.contains('active')) ||
+                     (this.classList.contains('pill') && this.classList.contains('active'));
+      const rippleColor = darkBg ? 'rgba(255,255,255,.22)' : 'rgba(79,70,229,.14)';
+      wave.style.cssText = 'width:' + size + 'px;height:' + size + 'px;left:' + x + 'px;top:' + y + 'px;background:' + rippleColor;
+      this.appendChild(wave);
+      wave.addEventListener('animationend', function() { wave.remove(); });
+    });
+  }
+  function initRipples() {
+    document.querySelectorAll('.btn-sign, .btn-save, .btn-accueil, .btn-reject, .btn-confirm-reject, .btn-cancel, .btn-back, .pill, .typo-btn').forEach(addRipple);
+  }
+  /* Staggered card fade-in when detail view opens */
+  function animateDetailCards() {
+    const cards = document.querySelectorAll('#detail-view .card');
+    cards.forEach(function(card, i) {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(16px)';
+      card.style.transition = 'none';
+      setTimeout(function() {
+        card.style.transition = 'opacity 0.38s ease-out, transform 0.38s ease-out';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 30 + i * 55);
+    });
+  }
+  /* Smooth textarea auto-resize */
+  function autoResize(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
+  }
+  function initAutoResize() {
+    document.querySelectorAll('textarea').forEach(function(ta) {
+      if (ta.dataset.ar) return;
+      ta.dataset.ar = '1';
+      ta.addEventListener('input', function() { autoResize(ta); });
+      if (ta.value) autoResize(ta);
+    });
+  }
+  /* Watch detail-view for content injection */
+  document.addEventListener('DOMContentLoaded', function() {
+    /* Accessibilité clavier des cartes d'accueil */
+    document.querySelectorAll('.home-card').forEach(function(card) {
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', 'button');
+      card.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+      });
+    });
+    initRipples();
+    initAutoResize();
+    var detailView = document.getElementById('detail-view');
+    if (detailView) {
+      var prevDisplay = detailView.style.display;
+      new MutationObserver(function(mutations) {
+        var justShown = false;
+        mutations.forEach(function(m) {
+          if (m.type === 'childList' && m.addedNodes.length > 0) {
+            initRipples();
+            initAutoResize();
+            if (detailView.style.display !== 'none') justShown = true;
+          }
+        });
+        if (justShown) animateDetailCards();
+      }).observe(detailView, { childList: true, subtree: false });
+    }
+  });
+})();
+</script>
+<div id="confirm-overlay" class="confirm-overlay" style="display:none">
+  <div class="confirm-box" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <div class="confirm-icon" id="confirm-icon"></div>
+    <div class="confirm-title" id="confirm-title"></div>
+    <div class="confirm-message" id="confirm-message"></div>
+    <div class="confirm-actions">
+      <button class="confirm-btn confirm-btn-cancel" id="confirm-cancel">Annuler</button>
+      <button class="confirm-btn confirm-btn-ok" id="confirm-ok">Confirmer</button>
+    </div>
+  </div>
+</div>
+<script>let alexManagerBusy=false,alexRoles={};
+async function alexRefreshManager(){try{fiches=await AlexBridge.rpc('loadManager');render();AlexBridge.status('Dossiers SharePoint actualisés');}catch(e){AlexBridge.status(e.message,true);showToast(e.message,'error');}}
+window.alexRefresh=alexRefreshManager;
+apiGetFiches=()=>AlexBridge.rpc('loadManager');
+apiSaveFiche=async f=>{await AlexBridge.rpc('saveManager',f);return true;};
+apiSaveFicheBeacon=()=>{};
+saveApp=async function(isAuto=true){
+  if(alexManagerBusy)return false;const f=getFiche(state.currentFicheId);if(!f||f.statut!=='a_traiter')return true;
+  alexManagerBusy=true;
+  try{persistFieldEdits(f);await apiSaveFiche(f);fiches=await AlexBridge.rpc('managerCached');AlexBridge.markDirty(false);AlexBridge.status('Enregistré dans SharePoint');if(!isAuto)showToast('Données enregistrées','success');return true;}
+  catch(e){showToast(e.message,'error');AlexBridge.status(e.message,true);return false;}finally{alexManagerBusy=false;}
+};
+async function alexDecision(kind,id){
+  if(alexManagerBusy)return;const original=getFiche(id);if(!original)return;
+  const f=structuredClone(original);persistFieldEdits(f);
+  if(kind==='deonto'){
+    if(!alexRoles.deontology){showToast('Accès Déontologie requis','error');return;}
+    f.signed_deonto=true;
+    if(!f.deonto_avis){showToast('Sélectionnez un avis Déontologie','error');return;}
+  }else if(kind==='sign'){
+    if(!alexRoles.manager){showToast('Accès manager requis','error');return;}
+    f.decision=document.getElementById('d_decision')?.value||'';
+    if(!f.decision){showToast('Sélectionnez une décision','error');return;}
+    f.commentaireManager=document.getElementById('d_manager_commentaire')?.value||'';
+    f.statut='signee';
+  }else{
+    f.motifRejet=document.getElementById('d_motifRejet')?.value.trim()||'';
+    if(f.motifRejet.length<20){showToast('Précisez le motif de rejet (20 caractères minimum)','error');return;}
+    f.statut='rejetee';
+  }
+  if(!confirm(kind==='reject'?'Retourner cette fiche à l’analyste ?':'Confirmer cet avis ou cette décision ?'))return;
+  alexManagerBusy=true;AlexBridge.status('Enregistrement SharePoint en cours…');
+  try{await apiSaveFiche(f);fiches=await AlexBridge.rpc('managerCached');AlexBridge.markDirty(false);AlexBridge.status('Décision enregistrée dans SharePoint');showToast('Enregistrement confirmé','success');if(kind!=='deonto')state.view='list';render();}
+  catch(e){AlexBridge.status(e.message,true);showToast(e.message,'error');}finally{alexManagerBusy=false;}
+}
+signDeonto=id=>alexDecision('deonto',id);
+signFiche=id=>alexDecision('sign',id);
+rejectFiche=id=>alexDecision('reject',id);
+window.revokeDecision=()=>showToast('Une décision enregistrée reste conservée. Le rejet ouvre une correction côté analyste.','info');
+const originalDetail=renderDetail;
+renderDetail=function(){originalDetail();
+  const container=document.getElementById('detail-view');
+  container?.querySelectorAll('input,select,textarea').forEach(el=>{
+    const deonto=el.id.startsWith('d_deonto_')||el.name==='deonto_avis';
+    const manager=['d_decision','d_manager_commentaire','d_motifRejet'].includes(el.id);
+    if(deonto)el.disabled=!alexRoles.deontology||!!getFiche(state.currentFicheId)?.signed_deonto;
+    else if(manager)el.disabled=!alexRoles.manager;
+    else {el.readOnly=true;if(el.tagName==='SELECT'||['radio','checkbox'].includes(el.type))el.disabled=true;}
+  });
+  container?.querySelectorAll('[onclick*="revokeDecision"]').forEach(el=>el.remove());
+};
+// Navigation never claims an asynchronous save succeeded.
+goBack=function(){if(alexManagerBusy)return;if(!confirm('Revenir à la liste ? Enregistrez vos saisies avant de quitter la fiche.'))return;state.view='list';state.currentFicheId=null;render();};
+goHome=function(){if(alexManagerBusy)return;if(!confirm('Revenir à l’accueil ? Enregistrez vos saisies avant de quitter la fiche.'))return;state.view='home';state.currentFicheId=null;render();};
+document.addEventListener('DOMContentLoaded',async()=>{try{alexRoles=await AlexBridge.rpc('roles');}catch(e){AlexBridge.status(e.message,true);}});
+
+window.updateFicheTag=async function(id,newTag){
+  if(alexManagerBusy)return;const f=getFiche(id);if(!f)return;
+  alexManagerBusy=true;
+  try{await apiSaveFiche({...f,tag:newTag});fiches=await AlexBridge.rpc('managerCached');renderDetail();showToast('Priorité enregistrée','success');}
+  catch(e){showToast(e.message,'error');AlexBridge.status(e.message,true);}finally{alexManagerBusy=false;}
+};
+</script></body>
+</html>

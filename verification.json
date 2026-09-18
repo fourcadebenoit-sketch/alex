@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-15",
+  "package": "alex-sharepoint",
+  "version": "1.0.0",
+  "python_tested": "3.12",
+  "tests_passed": 18,
+  "tests_failed": 0,
+  "wheel_installation": "passed",
+  "cli_help": "passed",
+  "bundled_assets": "verified",
+  "live_sharepoint": "not tested — no tenant access",
+  "provisioning": "mock-tested only",
+  "dependencies_tested": {
+    "msal": "1.38.0",
+    "requests": "2.34.2"
+  },
+  "wheel_sha256": "0c412df05a9c18e4874cfe286b6926664ad17b12819cb789c837f5b18a7aaac2"
+}

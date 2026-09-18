@@ -1,0 +1,141 @@
+{
+  "listTitle": "ALEX - Dossiers",
+  "schemaVersion": 1,
+  "fields": [
+    {
+      "name": "AlexKey",
+      "label": "Identifiant ALEX",
+      "type": "Text",
+      "indexed": true
+    },
+    {
+      "name": "AlexType",
+      "label": "Typologie",
+      "type": "Choice",
+      "indexed": true,
+      "choices": [
+        "pthr",
+        "ppe"
+      ]
+    },
+    {
+      "name": "AlexStatus",
+      "label": "Statut",
+      "type": "Choice",
+      "indexed": true,
+      "choices": [
+        "brouillon",
+        "soumis",
+        "deontologie",
+        "signee",
+        "rejetee",
+        "supprime"
+      ]
+    },
+    {
+      "name": "AlexPriority",
+      "label": "Priorité",
+      "type": "Choice",
+      "indexed": true,
+      "choices": [
+        "urgent",
+        "prioritaire",
+        "sans_operation"
+      ]
+    },
+    {
+      "name": "AlexClient",
+      "label": "Personne concernée",
+      "type": "Text",
+      "indexed": true
+    },
+    {
+      "name": "AlexAnalyst",
+      "label": "Analyste",
+      "type": "Text",
+      "indexed": true
+    },
+    {
+      "name": "AlexData1",
+      "label": "Contenu dossier 01",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData2",
+      "label": "Contenu dossier 02",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData3",
+      "label": "Contenu dossier 03",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData4",
+      "label": "Contenu dossier 04",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData5",
+      "label": "Contenu dossier 05",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData6",
+      "label": "Contenu dossier 06",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData7",
+      "label": "Contenu dossier 07",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData8",
+      "label": "Contenu dossier 08",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData9",
+      "label": "Contenu dossier 09",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData10",
+      "label": "Contenu dossier 10",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData11",
+      "label": "Contenu dossier 11",
+      "type": "Note"
+    },
+    {
+      "name": "AlexData12",
+      "label": "Contenu dossier 12",
+      "type": "Note"
+    }
+  ],
+  "views": [
+    {
+      "title": "Brouillons",
+      "query": "<Where><Eq><FieldRef Name=\"AlexStatus\"/><Value Type=\"Choice\">brouillon</Value></Eq></Where><OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\"/></OrderBy>"
+    },
+    {
+      "title": "À valider",
+      "query": "<Where><Eq><FieldRef Name=\"AlexStatus\"/><Value Type=\"Choice\">soumis</Value></Eq></Where><OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\"/></OrderBy>"
+    },
+    {
+      "title": "Avis Déontologie enregistrés",
+      "query": "<Where><Eq><FieldRef Name=\"AlexStatus\"/><Value Type=\"Choice\">deontologie</Value></Eq></Where><OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\"/></OrderBy>"
+    },
+    {
+      "title": "Validés",
+      "query": "<Where><Eq><FieldRef Name=\"AlexStatus\"/><Value Type=\"Choice\">signee</Value></Eq></Where><OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\"/></OrderBy>"
+    },
+    {
+      "title": "À corriger",
+      "query": "<Where><Eq><FieldRef Name=\"AlexStatus\"/><Value Type=\"Choice\">rejetee</Value></Eq></Where><OrderBy><FieldRef Name=\"ID\" Ascending=\"FALSE\"/></OrderBy>"
+    }
+  ]
+}
