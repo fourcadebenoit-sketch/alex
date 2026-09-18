@@ -26,12 +26,21 @@ Sous macOS/Linux :
 source .venv/bin/activate
 ```
 
-Puis :
+Puis, si le poste a un accès direct à PyPI :
 
 ```text
 python -m pip install dist/alex_sharepoint-1.0.0-py3-none-any.whl
 alex init-config
 ```
+
+**Poste sans accès à pypi.org (proxy d'entreprise, pas de droits admin pour le configurer)** : les dépendances (`msal`, `requests` et leurs sous-dépendances) sont fournies pré-téléchargées dans `vendor/wheels/`. Installer entièrement hors-ligne avec :
+
+```text
+python -m pip install --no-index --find-links vendor/wheels dist/alex_sharepoint-1.0.0-py3-none-any.whl
+alex init-config
+```
+
+`--no-index` empêche pip de contacter pypi.org ; `--find-links vendor/wheels` lui indique où trouver les paquets à la place. Voir `vendor/wheels/README.md` pour le détail des versions vendorisées et la procédure si le poste cible a une autre plateforme ou version de Python.
 
 Le fichier `alex-config.json` créé contient quatre valeurs à renseigner :
 
